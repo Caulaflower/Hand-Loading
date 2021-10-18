@@ -40,7 +40,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="CombatExtended">
-      <HintPath>..\..\..\..\CombatExtended-Development\Assemblies\CombatExtended.dll</HintPath>
+      <HintPath>C:\Users\tymon\Desktop\CombatExtended-Development\Assemblies\CombatExtended.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="HarmonyMod">
@@ -82,9 +82,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CalculUtils.cs" />
+    <Compile Include="gotodriver.cs" />
+    <Compile Include="messer.cs" />
+    <Compile Include="ShapeDefs.cs" />
     <Compile Include="crab.cs" />
     <Compile Include="Custom Caliber stuff\Caliber Creator.cs" />
     <Compile Include="explosion.cs" />
+    <Compile Include="FactionModExt.cs" />
     <Compile Include="FixedDamage.cs" />
     <Compile Include="LoadingBench.cs" />
     <Compile Include="savercomp.cs" />

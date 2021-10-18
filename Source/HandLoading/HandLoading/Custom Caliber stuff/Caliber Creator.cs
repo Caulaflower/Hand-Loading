@@ -1,16 +1,57 @@
-﻿using System;
+﻿using CombatExtended;
+using RimWorld;
+using RimWorld.Planet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using CombatExtended;
-using RimWorld;
+using System.Reflection;
 using UnityEngine;
 using Verse;
-using HarmonyLib;
-using HarmonyMod;
-using System.Reflection;
 
 namespace HandLoading.CustomCalibers
 {
+    public class CaliberRecreator : WorldComponent
+    {
+
+
+        public Dictionary<ThingWithComps, AmmoSetDef> compams = new Dictionary<ThingWithComps, AmmoSetDef>();
+        public void rechangecaliber(ThingWithComps thingwith, AmmoSetDef amset)
+        {
+            FieldInfo[] something = typeof(CompProperties_AmmoUser).GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            CompProperties_AmmoUser amuser = new CompProperties_AmmoUser();
+            foreach (FieldInfo field in something)
+            {
+                field.SetValue(amuser, field.GetValue(thingwith.TryGetComp<CompAmmoUser>().Props));
+            }
+            amuser.ammoSet = amset;
+            thingwith.TryGetComp<CompAmmoUser>().props = amuser;
+        }
+        public CaliberRecreator(World world) : base(world)
+        {
+        }
+
+        public override void ExposeData()
+        {
+            Scribe_Collections.Look(ref compams, "comampssa", LookMode.Reference, LookMode.Def);
+            foreach (KeyValuePair<ThingWithComps, AmmoSetDef> valuepear in compams)
+            {
+                Log.Message(valuepear.Key.Label);
+            }
+            base.ExposeData();
+        }
+        public override void FinalizeInit()
+        {
+            if (compams != null && compams.Count > 0)
+            {
+                foreach (KeyValuePair<ThingWithComps, AmmoSetDef> valuepear in compams)
+                {
+                    Log.Message(valuepear.Key.Label + " readding caliber conversion");
+                    rechangecaliber(valuepear.Key, valuepear.Value);
+                }
+            }
+            base.FinalizeInit();
+        }
+    }
     public class CaliberMacher : Window
     {
         private static readonly Vector2 Test = new Vector2(100f, 140f);
@@ -55,13 +96,13 @@ namespace HandLoading.CustomCalibers
             {
                 List<AmmoDef> ammos = DefDatabase<AmmoDef>.AllDefs.ToList();
                 ammos.RemoveAll(C => C.defName != "Ammo_556x45mmNATO_FMJ");
-                ammos.Add(DefDatabase<AmmoDef>.AllDefs.ToList().Find(K => K.defName == "Ammo_9x19mmPara_FMJ"));
-                ammos.Add(DefDatabase<AmmoDef>.AllDefs.ToList().Find(K => K.defName == "Ammo_762x51mmNATO_FMJ"));
                 ammos.Add(DefDatabase<AmmoDef>.AllDefs.ToList().Find(K => K.defName == "Ammo_762x54mmR_FMJ"));
                 List<FloatMenuOption> floatmenus = new List<FloatMenuOption>();
                 foreach (AmmoDef ammo in ammos)
                 {
-                    FloatMenuOption flot = new FloatMenuOption(ammo.label, delegate { Log.Message(ammo.defName);
+                    FloatMenuOption flot = new FloatMenuOption(ammo.label, delegate
+                    {
+                        Log.Message(ammo.defName);
                         string tink = GetNumbers(ammo.defName);
                         string tink2 = GetNumbers(ammo.defName);
 
@@ -75,11 +116,11 @@ namespace HandLoading.CustomCalibers
                             Log.Message(tink + "afafafa");
                             dimX = Convert.ToInt32(tink);
                         }
-                       
+
                     });
                     floatmenus.Add(flot);
-                   
-                    
+
+
                 }
                 Find.WindowStack.Add(new FloatMenu(floatmenus));
             }
@@ -113,9 +154,9 @@ namespace HandLoading.CustomCalibers
             trec4.height = 40f;
             trec4.y = 200f;
             trec4.x = somefink3 + 45f;
-            
+
             //float idk = 0f;
-            if(dimX != 0)
+            if (dimX != 0)
             {
                 if (Widgets.ButtonText(trec3, "+"))
                 {
@@ -126,7 +167,7 @@ namespace HandLoading.CustomCalibers
                     dimX -= tloat;
                 }
             }
-           
+
             Rect trec44 = new Rect(inRect);
             trec44 = trec44.CenteredOnXIn(inRect);
             trec44 = trec44.CenteredOnYIn(inRect);
@@ -135,7 +176,7 @@ namespace HandLoading.CustomCalibers
             trec44.y = 200f;
             trec44.x += 90f;
             Widgets.Label(trec44, "change caliber diamater");
-            if(Widgets.ButtonText(trec44, "test"))
+            if (Widgets.ButtonText(trec44, "test"))
             {
                 caldamage();
                 calpen();
@@ -171,9 +212,9 @@ namespace HandLoading.CustomCalibers
                     dimY -= tloat;
                 }
             }
-         
 
-           
+
+
         }
         public float dimage;
 
@@ -200,7 +241,7 @@ namespace HandLoading.CustomCalibers
         {
             Log.Message(dmg.ToString());
         }
-        
+
 
         public override Vector2 InitialSize
         {
@@ -219,7 +260,7 @@ namespace HandLoading.CustomCalibers
         }
         public float masss;
         public float bulk;
-    }  
+    }
     public static class CreatAmmoDefs
     {
         public static void makethedefs(float dmg, float armorpen, string dims, float mass, float bulk)
@@ -243,14 +284,14 @@ namespace HandLoading.CustomCalibers
             projectile.graphic = DefDatabase<ThingDef>.AllDefs.ToList().Find(P => P.defName == "Bullet_762x51mmNATO_FMJ").graphic;
             amdef.drawGUIOverlay = true;
 
-           
+
             foreach (FieldInfo fi in fields)
             {
                 fi.SetValue(amdef, fi.GetValue(DefDatabase<ThingDef>.AllDefs.ToList().Find(P => P.defName == "Ammo_556x45mmNATO_FMJ")));
             }
             amdef.defName = Rand.Range(0, 256789) + "e" + Rand.Range(0, 30) + "ee" + Rand.Range(0, 30) + "ammosetdef" + dims;
             AmmoSetDef amsetdef = new AmmoSetDef();
-            amsetdef.label = dims ;
+            amsetdef.label = dims;
             amsetdef.defName = Rand.Range(0, 256789) + "e" + Rand.Range(0, 30) + "ee" + Rand.Range(0, 30) + "ammosetdef" + dims;
             amsetdef.ammoTypes = new List<AmmoLink>();
             amdef.ammoClass = DefDatabase<AmmoCategoryDef>.AllDefs.ToList().Find(L => L.defName == "FullMetalJacket");
@@ -266,16 +307,16 @@ namespace HandLoading.CustomCalibers
                 armorPenetrationSharp = armorpen,
                 armorPenetrationBlunt = armorpen * 5,
                 damageDef = DamageDefOf.Bullet,
-                
+
             };
-            foreach(AmmoLink alink in amsetdef.ammoTypes)
+            foreach (AmmoLink alink in amsetdef.ammoTypes)
             {
                 Log.Error(alink.ammo.ToString());
             }
             DefDatabase<AmmoSetDef>.Add(amsetdef);
             //amdef.
             amdef.label = dims + " (FMJ)";
-            
+
             amdef.statBases.Add(new StatModifier { stat = StatDefOf.Mass, value = mass });
             amdef.statBases.Add(new StatModifier { stat = CE_StatDefOf.Bulk, value = bulk });
             Thing somefink = ThingMaker.MakeThing(amdef);
@@ -284,9 +325,9 @@ namespace HandLoading.CustomCalibers
             GenThing.TryDropAndSetForbidden(somefink, Find.CurrentMap.mapPawns.FreeColonists.RandomElement().Position, Find.CurrentMap, ThingPlaceMode.Direct, out m, false);
             Log.Error(m.Position.ToString());
 
-            
+
         }
-            
+
     }
     public static class DebugToolsIan
     {
@@ -298,10 +339,23 @@ namespace HandLoading.CustomCalibers
                 ThingWithComps t = thing as ThingWithComps;
                 if (t != null && t.AllComps.Any(L => L is CompAmmoUser))
                 {
-                    t.TryGetComp<CompAmmoUser>().Props.ammoSet = DefDatabase<AmmoSetDef>.AllDefs.ToList().FindAll(k => k.defName.Contains("ee")).RandomElement();
+                    FieldInfo[] something = typeof(CompProperties_AmmoUser).GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                    CompProperties_AmmoUser amuser = new CompProperties_AmmoUser();
+                    foreach (FieldInfo field in something)
+                    {
+                        field.SetValue(amuser, field.GetValue(t.TryGetComp<CompAmmoUser>().Props));
+                    }
+                    amuser.ammoSet = DefDatabase<AmmoSetDef>.AllDefs.ToList().FindAll(k => k.defName.Contains("ee")).RandomElement();
+                    t.TryGetComp<CompAmmoUser>().props = amuser;
+                    if (Find.World.GetComponent<CaliberRecreator>().compams == null)
+                    {
+                        Find.World.GetComponent<CaliberRecreator>().compams = new Dictionary<ThingWithComps, AmmoSetDef>();
+                    }
+                    Find.World.GetComponent<CaliberRecreator>().compams.Add(t, amuser.ammoSet);
+
                 }
             }
-           
+
         }
     }
 

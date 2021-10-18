@@ -27,10 +27,10 @@
     <label>Loading design bench.</label>
     <description>Ammo design bench.</description>
     <graphicData>
-      <texPath>Things/Building/Furniture/Bed/Bed</texPath>
+      <texPath>bench/LoadingDesignLoadingDesignBench</texPath>
       <graphicClass>Graphic_Multi</graphicClass>
       <shaderType>CutoutComplex</shaderType>
-      <drawSize>(2,2)</drawSize>
+      <drawSize>(2,1)</drawSize>
       <damageData>
         <rect>(0,0.05,1,1.95)</rect>
       </damageData>
@@ -42,13 +42,13 @@
       <WorkToBuild>800</WorkToBuild>
       <Mass>30</Mass>
     </statBases>
-    <size>(1,2)</size>
+    <size>(2,1)</size>
     <stuffCategories>
       <li>Metallic</li>
       <li>Woody</li>
       <li>Stony</li>
     </stuffCategories>
-    <costStuffCount>45</costStuffCount>
+    <costStuffCount>85</costStuffCount>
     <building>
       <buildingTags>
         <li>Production</li>
@@ -59,9 +59,10 @@
     <staticSunShadowHeight>0.17</staticSunShadowHeight>
     <castEdgeShadows>True</castEdgeShadows>
     <designationHotKey>Misc2</designationHotKey>
+    <designationCategory>Production</designationCategory>
     <techLevel>Industrial</techLevel>
     <researchPrerequisites>
-      <li>ComplexFurniture</li>
+      <li>HandLoading</li>
     </researchPrerequisites>
     <uiIconScale>0.90</uiIconScale>
   </ThingDef>

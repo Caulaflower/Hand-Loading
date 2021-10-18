@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
+
+  <ThingDef>
+    <defName>vcghjkilokjbhvg</defName>
+    <tickerType>Normal</tickerType>
+    <graphicData>
+      <texPath>proner</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+    </graphicData>
+    <thingClass>CombatExtended.BulletCE</thingClass>
+    <label>a</label>
+    <projectile Class="CombatExtended.ProjectilePropertiesCE">
+      <damageDef>Bullet</damageDef>
+      <speed>56</speed>
+      <dropsCasings>true</dropsCasings>
+      <damageAmountBase>3</damageAmountBase>
+      <armorPenetrationSharp>15.89818</armorPenetrationSharp>
+      <armorPenetrationBlunt>11.44</armorPenetrationBlunt>
+    </projectile>
+  </ThingDef>
+
     <StatCategoryDef>
         <defName>PowderStuff</defName>
         <label>Effects on ammunition</label>
