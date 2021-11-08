@@ -94,7 +94,13 @@ namespace HandLoading
             listingStandard.TextEntry("container is created after first ammo is created with the settings on");
             listingStandard.Gap(60);
             listingStandard.CheckboxLabeled("Allow all guns to be rebareled to any caliber", ref settings.Silly, "");
+           
+           
+              
+          
             listingStandard.Gap(120);
+
+           
 
             if (listingStandard.ButtonText("Remove all ammos"))
             {
@@ -110,6 +116,8 @@ namespace HandLoading
                 {
                     string[] vs = Directory.GetDirectories(s + "/");
                     vs.ToList().RemoveAll(OO => OO.Contains("Textures"));
+                    vs.ToList().RemoveAll(OO => OO.Contains("Source"));
+                    vs.ToList().RemoveAll(OO => OO.Contains("Sounds"));
                     foreach (string fathouse in vs)
                     {
                         //Log.Message(fathouse);
@@ -125,6 +133,8 @@ namespace HandLoading
                 Log.Message(stuff.ToString());
 
             }
+
+            
 
 
             listingStandard.Gap(20);
@@ -154,51 +164,7 @@ namespace HandLoading
                     }
                 }
             }
-            if (false == true)
-            {
-                if (ghjkl != null)
-                {
-                    foreach (string str in ghjkl)
-                    {
-                        if (str == null)
-                        {
-                            Log.Message("what the fuck");
-                        }
-                        else
-                        {
-                            listingStandard.Gap(5);
-
-                            if (DefDatabase<AmmoCategoryDef>.AllDefs.ToList().Any(TT => str.Contains(TT.fileName)))
-                            {
-                                if (listingStandard.ButtonText(DefDatabase<AmmoCategoryDef>.AllDefs.ToList().Find(TT => str.Contains(TT.fileName)).label))
-                                {
-                                    File.Delete(str);
-                                }
-                            }
-                            if (DefDatabase<ThingDef>.AllDefs.ToList().Any(TT => str.Contains(TT.fileName)))
-                            {
-                                if (listingStandard.ButtonText(DefDatabase<ThingDef>.AllDefs.ToList().Find(TT => str.Contains(TT.fileName)).label))
-                                {
-                                    File.Delete(str);
-                                }
-
-                            }
-                            else
-                            {
-
-                                if (listingStandard.ButtonText(str))
-                                {
-                                    File.Delete(str);
-                                }
-                            }
-
-                        }
-
-                        //listingStandard.Gap(20);
-                        //listingStandard.ButtonText(str);
-                    }
-                }
-            }
+            
 
 
 
@@ -286,7 +252,7 @@ namespace HandLoading
         }
 
         public othersomethingsets sets;
-        public void SaveAmmodef(AmmoDef ammo = null, AmmoCategoryDef ammoCategory = null, ThingDef projectile = null, AmmoSetDef ammoset = null, RecipeDef recpe = null, float someamount = 0f, ThingDef damImtired = null, float re = 0f, bool amifrag = false, bool amItrash = false)
+        public void SaveAmmodef(AmmoDef ammo = null, AmmoCategoryDef ammoCategory = null, ThingDef projectile = null, AmmoSetDef ammoset = null, RecipeDef recpe = null, float someamount = 0f, ThingDef damImtired = null, float re = 0f, bool amifrag = false, bool amItrash = false, bool npcammo = false, bool amIthermo = false)
         {
             sets = HandeLoading.settings;
             abc++;
@@ -372,6 +338,7 @@ namespace HandLoading
                     + "<tickerType>" + ammo.tickerType + "</tickerType>"
                     + "<thingCategories><li>ResourcesRaw</li><li>HandsLoadedAmmo</li></thingCategories>"
                     + "<ammoClass>" + ammoCategory.defName + "</ammoClass>"
+                    + "<modExtensions><li Class='HandLoading.modextmisc'>" + "<upset>" + ammo.AmmoSetDefs.First().defName + "</upset><prjder>" + projectile.defName + "</prjder></li></modExtensions>"
                     + "<comps><li Class='HandLoading.damagercproprs'><dammpoints>" + re.ToString() + "</dammpoints></li><li><compClass>HandLoading.HaulComp</compClass></li></comps>"
                     + "<graphicData>" + "<texPath>" + ammo.graphic.path + "</texPath>"
                     + "<graphicClass>" + ammo.graphicData.graphicClass.ToString() + "</graphicClass>" + "</graphicData>"
@@ -441,7 +408,11 @@ namespace HandLoading
                     }
                     doc3.LoadXml("<Defs><ThingDef><defName>" + projectile.defName + "</defName>" + "<tickerType>Normal</tickerType>" + "<graphicData>" + "<texPath>" + projectile.graphicData.texPath + "</texPath>" + "<graphicClass>Graphic_Single</graphicClass>" + "</graphicData>" + "<thingClass>CombatExtended.BulletCE</thingClass>" + "<label>" + projectile.label + "</label>" + "<projectile Class='CombatExtended.ProjectilePropertiesCE'>" + "<damageDef>Bullet</damageDef>" + "<speed>" + projpropsCE.speed.ToString() + "</speed>" + "<dropsCasings>true</dropsCasings>" + "<damageAmountBase>" + "5" + "</damageAmountBase>" + "<armorPenetrationSharp>" + projpropsCE.armorPenetrationSharp.ToString() + "</armorPenetrationSharp>" + "<armorPenetrationBlunt>" + projpropsCE.armorPenetrationBlunt.ToString() + "</armorPenetrationBlunt>" + "</projectile>" + "</ThingDef></Defs>"); //Your string here
                 }
-
+                if (amIthermo | projpropsCE.damageDef.defName == "Thermobaric")
+                {
+                    Log.Warning("test test, works");
+                    doc3.LoadXml("<Defs><ThingDef><defName>" + projectile.defName + "</defName>" + "<tickerType>Normal</tickerType>" + "<graphicData>" + "<texPath>" + projectile.graphicData.texPath + "</texPath>" + "<graphicClass>Graphic_Single</graphicClass>" + "</graphicData>" + "<thingClass>CombatExtended.BulletCE</thingClass>" + "<label>" + projectile.label + "</label>" + "<projectile Class='CombatExtended.ProjectilePropertiesCE'>" + "<damageDef>Thermobaric</damageDef>" + "<explosionRadius>" + projpropsCE.explosionRadius + "</explosionRadius>" + "<speed>" + projpropsCE.speed.ToString() + "</speed>" + "<dropsCasings>true</dropsCasings>" + "<damageAmountBase>" + projectile.GetModExtension<HandLoading.BulletModExtension>().FixedDamage.ToString() + "</damageAmountBase>" + "<armorPenetrationSharp>" + projpropsCE.armorPenetrationSharp.ToString() + "</armorPenetrationSharp>" + "<armorPenetrationBlunt>" + projpropsCE.armorPenetrationBlunt.ToString() + "</armorPenetrationBlunt>" + "</projectile>" + "</ThingDef></Defs>"); //Your string here
+                }
 
 
                 XmlTextWriter writer3 = new XmlTextWriter(actualpathtomod + "/bullets/projectile" + abc.ToString() + ".xml", null);
@@ -453,56 +424,14 @@ namespace HandLoading
 
 
 
-            if (true == false)
-            {
-                if (ammo != null)
-                {
-                    Log.Message("testink");
-                    XmlDocument doc4 = new XmlDocument();
-                    string teszzt = "<Defs>";
-
-                    foreach (FieldInfo info in ammo.GetType().GetFields())
-                    {
-                        Log.Message(info.Name, true);
-                        teszzt += ("<" + info.Name + ">" + info.GetValue(ammo) + "</" + info.Name + ">");
-                    }
-                    teszzt += "</Defs>";
-                    teszzt.Replace("<comps>System.Collections.Generic.List`1[Verse.CompProperties]</comps>", "");
-                    doc4.LoadXml(teszzt);
-                    // Save the document to a file and auto-indent the output.
-                    XmlTextWriter writer4 = new XmlTextWriter(actualpathtomod + "/../Patches/codemade/testhing" + Rand.Range(0, 56709723).ToString() + ".xml", null);
-
-                    writer4.Formatting = Formatting.Indented;
-                    doc4.Save(writer4);
-                }
-                if (projectile != null)
-                {
-                    Log.Message("testink");
-                    XmlDocument doc4 = new XmlDocument();
-                    string teszzt = "<Defs>";
-
-                    foreach (FieldInfo info in projectile.GetType().GetFields())
-                    {
-                        Log.Message(info.Name, true);
-                        teszzt += ("<" + info.Name + ">" + info.GetValue(ammo) + "</" + info.Name + ">");
-                    }
-                    teszzt += "</Defs>";
-                    doc4.LoadXml(teszzt);
-                    // Save the document to a file and auto-indent the output.
-                    XmlTextWriter writer4 = new XmlTextWriter(actualpathtomod + "/../Patches/codemade/testhingprj" + Rand.Range(0, 56709723).ToString() + ".xml", null);
-
-                    writer4.Formatting = Formatting.Indented;
-                    doc4.Save(writer4);
-                }
-            }
+            
 
 
 
 
 
 
-
-            if (ammo != null && projectile != null && ammoset != null)
+            if (ammo != null && projectile != null && ammoset != null && !npcammo && false)
             {
                 Log.Message("saving patch");
                 XmlDocument doc4 = new XmlDocument();
@@ -510,6 +439,18 @@ namespace HandLoading
 
                 // Save the document to a file and auto-indent the output.
                 XmlTextWriter writer4 = new XmlTextWriter(actualpathtomod + "/../Patches/codemade/patchnumber" + Rand.Range(0, 56709723).ToString() + ".xml", null);
+
+                writer4.Formatting = Formatting.Indented;
+                doc4.Save(writer4);
+            }
+            if (ammo != null && projectile != null && ammoset != null && npcammo && false)
+            {
+                Log.Message("saving patch");
+                XmlDocument doc4 = new XmlDocument();
+                doc4.LoadXml("<Patch><Operation Class='PatchOperationAdd'><xpath>/Defs/CombatExtended.AmmoSetDef[defName='" + ammoset.defName + "']/ammoTypes" + "</xpath><value>" + "<" + ammo.defName + ">" + projectile.defName + "</" + ammo.defName + ">" + "</value></Operation></Patch>"); //Your string here
+
+                // Save the document to a file and auto-indent the output.
+                XmlTextWriter writer4 = new XmlTextWriter(actualpathtomod + "/../Patches/codemade/patchnumber" + Rand.Range(0, 56709723).ToString() + "identifier" + ".xml", null);
 
                 writer4.Formatting = Formatting.Indented;
                 doc4.Save(writer4);
@@ -561,5 +502,83 @@ namespace HandLoading
         public Type ammotype;
         public string defnameofammo;
         public IEnumerable<AmmoDef> ammodefmade;
+    }
+
+    [StaticConstructorOnStartup]
+    public class ActualPatching
+    {
+        static ActualPatching()
+        {
+            foreach (AmmoDef amder in DefDatabase<AmmoDef>.AllDefsListForReading.FindAll(t => t.modExtensions != null && t.HasModExtension<modextmisc>()))
+            {
+                //Log.Message(amder.label);
+                amder.GetModExtension<modextmisc>().upset.ammoTypes.Add(new AmmoLink {ammo = amder, projectile = amder.GetModExtension<modextmisc>().prjder});
+            }
+        }
+    }
+
+    public class modextmisc : DefModExtension
+    {
+        public AmmoSetDef upset;
+
+        public ThingDef prjder;
+    }
+
+    [StaticConstructorOnStartup]
+    public class FuckedPatchRemover
+    {
+        static FuckedPatchRemover()
+        {
+            List<PatchOperation> patches = Verse.LoadedModManager.RunningModsListForReading.Find(F => F.Name == "Hand loads [Beta]").Patches.ToList();
+            Log.Message(Verse.LoadedModManager.RunningModsListForReading.Find(F => F.Name == "Hand loads [Beta]").RootDir);
+            foreach (PatchOperationAdd patch in patches)
+            {
+                string tring = System.IO.File.ReadAllText(patch.sourceFile);
+                tring = tring.Trim();
+                var s = tring;
+                string[] subs = s.Split('/');
+                foreach (string sub in subs)
+                {
+                    if (sub.Contains("value"))
+                    {
+                        string amogus = sub;
+                        string[] sub2 = sub.Split('<');
+                        //Log.Message($"Substring: {amogus}");
+                        foreach (string sub44 in sub2)
+                        {
+
+                            if(sub44.Contains("True") && sub44.Contains("False"))
+                            {
+                                
+                                string[] sub3 = sub44.Split('>');
+                                foreach (string sub444 in sub3)
+                                {
+                                    //Log.Message($"{sub444}");
+                                    if (DefDatabase<AmmoDef>.AllDefsListForReading.Any(pp => pp.defName == sub444) | DefDatabase<ThingDef>.AllDefsListForReading.Any(pp => pp.defName == sub444))
+                                    {
+                                        //Log.Error("exists");
+                                    }
+                                    else
+                                    {
+                                        
+                                        Log.Error("doesn't exist: " + patch.sourceFile);
+                                        File.Delete(patch.sourceFile);
+                                    }
+                                }
+                                   
+                            }
+                            
+                            
+
+                        }
+                     
+                    }
+
+
+                }
+                //Log.Message(tring);
+            }
+            
+        }
     }
 }

@@ -22,11 +22,7 @@ namespace HandLoading
                 return result < 0 ? def.projectile.GetDamageAmount(1) : result;
             }
         }
-        public override void Tick()
-        {
-
-            base.Tick();
-        }
+        
     }
 
 }

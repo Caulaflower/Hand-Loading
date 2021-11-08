@@ -15,14 +15,7 @@ namespace HandLoading
         public override void ExposeData()
         {
             Scribe_Collections.Look(ref Factionammos, "factionammos", LookMode.Value, LookMode.Def);
-            if (Factionammos != null)
-            {
-                foreach (KeyValuePair<string, AmmoDef> am in Factionammos)
-                {
-                    Log.Message(am.Value.label);
-                }
-
-            }
+          
 
 
             base.ExposeData();

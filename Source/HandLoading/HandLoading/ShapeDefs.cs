@@ -32,5 +32,7 @@ namespace HandLoading
         public bool penusestatpawn = true;
 
         public bool isjacketed = false;
+
+        public bool ThermoBar = false;
     }
 }

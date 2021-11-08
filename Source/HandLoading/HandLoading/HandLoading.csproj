@@ -47,6 +47,10 @@
       <HintPath>D:\HarmonyRimWorld-latest\Current\Assemblies\HarmonyMod.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="rechamberglass">
+      <HintPath>..\..\..\..\Rechamber guns\Assemblies\rechamberglass.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -82,8 +86,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CalculUtils.cs" />
+    <Compile Include="messier.cs" />
     <Compile Include="gotodriver.cs" />
     <Compile Include="messer.cs" />
+    <Compile Include="MyTab.cs" />
     <Compile Include="ShapeDefs.cs" />
     <Compile Include="crab.cs" />
     <Compile Include="Custom Caliber stuff\Caliber Creator.cs" />
