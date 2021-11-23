@@ -43,6 +43,20 @@
   </ResearchProjectDef>
 
   <ResearchProjectDef>
+    <defName>3plexRound</defName>
+    <label>triplex rounds</label>
+    <description>Make triplex ammo. That is ammo with 3 projectiles</description>
+    <baseCost>3200</baseCost>
+    <techLevel>Spacer</techLevel>
+    <researchViewX>2.50</researchViewX>
+    <researchViewY>0.60</researchViewY>
+    <tab>handloads</tab>
+    <prerequisites>
+      <li>HandLoading</li>
+    </prerequisites>
+  </ResearchProjectDef>
+
+  <ResearchProjectDef>
     <defName>apone</defName>
     <label>+P cartridges</label>
     <description>Raises the maximum powder charge you can load into the gun to 2.</description>
@@ -56,6 +70,8 @@
     </prerequisites>
   </ResearchProjectDef>
 
+
+
   <ResearchProjectDef>
     <defName>aptwo</defName>
     <label>+P+ cartridges</label>
@@ -67,6 +83,21 @@
     <tab>handloads</tab>
     <prerequisites>
       <li>apone</li>
+    </prerequisites>
+  </ResearchProjectDef>
+
+
+  <ResearchProjectDef>
+    <defName>spacerpowder</defName>
+    <label>spacer powder</label>
+    <description>Spacer powder.</description>
+    <baseCost>8000</baseCost>
+    <techLevel>Industrial</techLevel>
+    <researchViewX>4.00</researchViewX>
+    <researchViewY>0.00</researchViewY>
+    <tab>handloads</tab>
+    <prerequisites>
+      <li>aptwo</li>
     </prerequisites>
   </ResearchProjectDef>
 

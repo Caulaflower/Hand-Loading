@@ -17,7 +17,7 @@ namespace HandLoading
                
                 foreach(Thing sing in spot.Position.GetThingList(Find.CurrentMap))
                 {
-                    Log.Message(sing.Label);
+                    //Log.Message(sing.Label);
                 }
                 //
                 if (spot.Position.GetThingList(Find.CurrentMap).Any(l => l.def == this.parent.def) | !spot.Position.GetThingList(Find.CurrentMap).Any( D => (D is AmmoThing) ))
@@ -35,7 +35,7 @@ namespace HandLoading
         }
         public override void PostPostMake()
         {
-            Log.Message("hello world");
+            //Log.Message("hello world");
             base.PostPostMake();
         }
     }
@@ -51,9 +51,8 @@ namespace HandLoading
         protected override IEnumerable<Toil> MakeNewToils()
         {
             yield return Toils_Goto.GotoThing(TargetIndex.B, PathEndMode.ClosestTouch);
-            yield return Toils_Haul.StartCarryThing(TargetIndex.B);
+            yield return Toils_Haul.TakeToInventory(TargetIndex.B, TargetB.Thing.stackCount);
             yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.ClosestTouch);
-            yield return Toils_Haul.CarryHauledThingToCell(TargetIndex.A, PathEndMode.OnCell);
             yield return Toils_General.Do(delegate
             {
                 if (TargetA.Thing.Position.GetThingList(Find.CurrentMap).Any(F => F.def == TargetB.Thing.def))
@@ -61,6 +60,12 @@ namespace HandLoading
                     TargetA.Thing.Position.GetThingList(Find.CurrentMap).Find(G => G.def == TargetB.Thing.def).stackCount += TargetB.Thing.stackCount;
                     TargetB.Thing.Destroy();
 
+                }
+                else
+                {
+                    var varA = GetActor().inventory.innerContainer.ToList().Find(p => p.def == TargetB.Thing.def);
+                    var varB = new Thing();
+                    GenThing.TryDropAndSetForbidden(varA, TargetA.Thing.Position, TargetA.Thing.Map, ThingPlaceMode.Direct, out varB, false);
                 }
             });
 
@@ -73,5 +78,10 @@ namespace HandLoading
         public static JobDef gotospot;
 
         public static ThingDef HLspot;
+    }
+
+    public class UserReAdder : DefModExtension
+    {
+        public List<ThingDef> users_to_add;
     }
 }

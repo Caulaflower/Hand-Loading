@@ -20,7 +20,9 @@ namespace HandLoading
 
         public bool Silly;
 
-        public int factionammos;
+        public bool socks = false;
+
+        public int factionammos = 12;
 
 
         public override void ExposeData()
@@ -28,9 +30,34 @@ namespace HandLoading
 
             Scribe_Values.Look<int>(ref factionammos, "factionammus");
             Scribe_Values.Look<bool>(ref Open, "Open");
+            Scribe_Values.Look<bool>(ref Silly, "poopcock");
             base.ExposeData();
         }
     }
+
+    [StaticConstructorOnStartup]
+    public class ReInjectingDefs
+    {
+        static ReInjectingDefs()
+        {
+            foreach(AmmoDef amdef in DefDatabase<AmmoDef>.AllDefsListForReading.FindAll(t => t.HasModExtension<HandLoading.modextmisc>()))
+            {
+                var varA = amdef.GetModExtension<modextmisc>();
+                if (varA != null)
+                {
+                    if (varA.prjder != null)
+                    {
+                        varA.upset.ammoTypes.Add(new AmmoLink { ammo = amdef, projectile = varA.prjder });
+                    }
+                   
+                    ////Log.Message("injection succesful for: ".Colorize(Color.green) + amdef.label + " projectile: " + varA.prjder.label + " caliber: " + varA.upset.label);
+                }
+            }
+        }
+    }
+
+    
+
     public class HandeLoading : Mod
     {
         public static othersomethingsets settings;
@@ -51,9 +78,11 @@ namespace HandLoading
             listingStandard.Begin(inRect);
             listingStandard.GapLine(60);
             listingStandard.Label("Faction hand loads max amount");
-            settings.factionammos = (int)listingStandard.Slider(settings.factionammos, 0, 30);
+            settings.factionammos = (int)listingStandard.Slider(settings.factionammos, 1, 50);
             listingStandard.Gap(5);
             listingStandard.Label(settings.factionammos.ToString());
+            listingStandard.Gap(5);
+            //listingStandard.CheckboxLabeled();
             listingStandard.GapLine(60);
 
 
@@ -93,7 +122,7 @@ namespace HandLoading
             listingStandard.TextEntry("IF YOU CHOOSE TO DO IT REMEMBER TO ADD THE CONTAINER TO YOUR MODLIST");
             listingStandard.TextEntry("container is created after first ammo is created with the settings on");
             listingStandard.Gap(60);
-            listingStandard.CheckboxLabeled("Allow all guns to be rebareled to any caliber", ref settings.Silly, "");
+            listingStandard.CheckboxLabeled("Enable bed graphic for hand loading design bench (change requires game reload)", ref settings.Silly, "");
            
            
               
@@ -106,9 +135,9 @@ namespace HandLoading
             {
 
 
-                Log.Message("2");
+                //Log.Message("2");
                 List<ThingDef> filestoyeet = new List<ThingDef>();
-                //Log.Error(ThingDefOf.Door.fileName);
+                ////Log.Error(ThingDefOf.Door.fileName);
                 //filestoyeet.Add(ThingDefOf.AncientBed);
 
                 string[] stuff = Directory.GetDirectories(actualpathtomod + "/");
@@ -120,17 +149,17 @@ namespace HandLoading
                     vs.ToList().RemoveAll(OO => OO.Contains("Sounds"));
                     foreach (string fathouse in vs)
                     {
-                        //Log.Message(fathouse);
+                        ////Log.Message(fathouse);
                         string[] again = Directory.GetFiles(fathouse + "/");
                         foreach (string cos in again)
                         {
-                            Log.Message(cos);
+                            //Log.Message(cos);
                             File.Delete(cos);
                         }
                     }
-                    //Log.Message(s);
+                    ////Log.Message(s);
                 }
-                Log.Message(stuff.ToString());
+                //Log.Message(stuff.ToString());
 
             }
 
@@ -146,11 +175,11 @@ namespace HandLoading
                 vs.ToList().RemoveAll(OO => OO.Contains("Textures"));
                 foreach (string fathouse in vs)
                 {
-                    //Log.Message(fathouse);
+                    ////Log.Message(fathouse);
                     string[] again = Directory.GetFiles(fathouse + "/");
                     foreach (string cos in again)
                     {
-                        //Log.Message(cos);
+                        ////Log.Message(cos);
                         if (ghjkl == null)
                         {
                             ghjkl = new List<string>();
@@ -193,62 +222,22 @@ namespace HandLoading
         {
             base.ExposeData();
             Scribe_Values.Look<int>(ref abc, "abc");
-            Log.Message(abc.ToString());
+            //Log.Message(abc.ToString());
 
         }
+
         public override void FinalizeInit()
         {
-
-            foreach (RecipeDef recdef in DefDatabase<RecipeDef>.AllDefs.ToList().FindAll(o => (o.modContentPack?.Name ?? "a") == "Hand loads [Beta]" && (!o.HasModExtension<BootlegExtension>())))
+            foreach (RecipeDef recpe in DefDatabase<RecipeDef>.AllDefsListForReading.FindAll(p => p.HasModExtension<UserReAdder>()))
             {
-                //Log.Message(recdef.ToString());
-                if (recdef.recipeUsers == null)
-                {
-                    recdef.recipeUsers = new List<ThingDef>();
-                }
-                if (recdef.recipeUsers != null)
-                {
-                    recdef.recipeUsers.Add(CE_ThingDefOf.AmmoBench);
-                }
-
+                //Log.Message(recpe.label.Colorize(new Color(0, 255, 0)));
+                var modext = (UserReAdder)recpe.GetModExtension<UserReAdder>();
+                recpe.recipeUsers.AddRange(modext.users_to_add);
+                //Log.Message(recpe.label.Colorize(new Color(255, 0, 60)));
+                //Log.Message("success".Colorize(new Color(255, 0, 60)));
 
             }
-            foreach (RecipeDef recdef in DefDatabase<RecipeDef>.AllDefs.ToList().FindAll(o => (o.modContentPack?.Name ?? "a") == "Hand loads [Beta]" && (o.HasModExtension<BootlegExtension>())))
-            {
-                //Log.Message(recdef.ToString());
-                if (recdef.recipeUsers == null)
-                {
-                    recdef.recipeUsers = new List<ThingDef>();
-                }
-                if (recdef.recipeUsers != null)
-                {
-                    recdef.recipeUsers.Add(AmmoClassesDefOf.CraftingSpot);
-                }
-
-
-            }
-
-            foreach (RecipeDef recdef in DefDatabase<RecipeDef>.AllDefs.ToList().FindAll(o => (o.modContentPack?.Name ?? "a") == "Hand Loads Saved Ammo Data Container"))
-            {
-                //Log.Message(recdef.ToString());
-                if (recdef.recipeUsers == null)
-                {
-                    recdef.recipeUsers = new List<ThingDef>();
-                }
-                if (recdef.recipeUsers != null)
-                {
-                    recdef.recipeUsers.Add(CE_ThingDefOf.AmmoBench);
-                }
-
-
-            }
-
-
             base.FinalizeInit();
-
-
-
-
         }
 
         public othersomethingsets sets;
@@ -257,15 +246,25 @@ namespace HandLoading
             sets = HandeLoading.settings;
             abc++;
 
+            string ReUserModExt = "<users_to_add>";
+
+            foreach(ThingDef bench in recpe?.AllRecipeUsers ?? new List<ThingDef>())
+            {
+                //Log.Message("=========================".Colorize(new Color(255, 0, 255)));
+                //Log.Message(bench.label.Colorize(new Color(255, 0, 255)));
+                ReUserModExt += "<li>" + bench.defName + "</li>";
 
 
+            }
+
+            ReUserModExt += "</users_to_add>";
 
 
             string workingDirectory = Environment.CurrentDirectory;
-            Log.Error(Directory.GetParent(workingDirectory).Parent.FullName);
+            //Log.Error(Directory.GetParent(workingDirectory).Parent.FullName);
             if (sets.Open && !(Directory.Exists(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer")))
             {
-                Log.Message("Creating container directories");
+                //Log.Message("Creating container directories");
                 Directory.CreateDirectory(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer");
                 Directory.CreateDirectory(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer/Defs");
                 Directory.CreateDirectory(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer/Defs/ammos");
@@ -284,27 +283,31 @@ namespace HandLoading
                 writersaver.Formatting = Formatting.Indented;
                 docsaver.Save(writersaver);
             }
+            if (sets.Open && !(Directory.Exists(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer/Defs/saves")))
+            {
+                Directory.CreateDirectory(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer/Defs/saves");
+            }
             string actualpathtomod = Directory.GetParent(workingDirectory).Parent.FullName + "/workshop/content/294100/2548930569/Defs";
 
             if (Directory.Exists(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/Hand-Loading"))
             {
-                Log.Message("saved ammo in github version files");
+                //Log.Message("saved ammo in github version files");
                 actualpathtomod = Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/Hand-Loading/Defs";
             }
             if (Directory.Exists(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/2548930569"))
             {
-                Log.Message("saved ammo in rimpy version files");
+                //Log.Message("saved ammo in rimpy version files");
 
                 actualpathtomod = Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/2548930569/Defs";
             }
             if (Directory.Exists(Directory.GetParent(workingDirectory).Parent.FullName + "/workshop/content/294100/2548930569/Defs"))
             {
-                Log.Message("saved ammo in steam version files");
+                //Log.Message("saved ammo in steam version files");
                 actualpathtomod = Directory.GetParent(workingDirectory).Parent.FullName + "/workshop/content/294100/2548930569/Defs";
             }
             if (Directory.Exists(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer"))
             {
-                Log.Message("saved ammo in container files. The messages are fucked, this is definitely the actual one");
+                //Log.Message("saved ammo in container files. The messages are fucked, this is definitely the actual one");
                 actualpathtomod = Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer/Defs";
             }
 
@@ -315,7 +318,7 @@ namespace HandLoading
 
             if (ammoCategory != null)
             {
-                Log.Message("saving ammo category");
+                //Log.Message("saving ammo category");
                 XmlDocument doc2 = new XmlDocument();
                 doc2.LoadXml(
                     "<Defs><CombatExtended.AmmoCategoryDef><defName>" + ammoCategory.defName + "</defName><label>" + ammoCategory.label + "</label><labelShort>" + ammoCategory.label + "</labelShort><description>" + ammo.description + "</description></CombatExtended.AmmoCategoryDef></Defs>"); //Your string here
@@ -329,7 +332,7 @@ namespace HandLoading
             }
             if (ammo != null)
             {
-                Log.Message("saving ammo");
+                //Log.Message("saving ammo");
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(
                     "<Defs><ThingDef Class='CombatExtended.AmmoDef'><defName>" + ammo.defName + "</defName>"
@@ -358,25 +361,25 @@ namespace HandLoading
             {
 
                 ProjectilePropertiesCE projpropsCE = projectile.projectile as ProjectilePropertiesCE;
-                Log.Error("saving projectile");
+                //Log.Error("saving projectile");
                 XmlDocument doc3 = new XmlDocument();
                 if (!amifrag)
                 {
                     if ((projpropsCE.secondaryDamage?.Count ?? 0) >= 1)
                     {
-                        Log.Message("amogussy");
-                        doc3.LoadXml("<Defs><ThingDef><defName>" + projectile.defName + "</defName>" + "<tickerType>Normal</tickerType>" + "<graphicData>" + "<texPath>" + projectile.graphicData.texPath + "</texPath>" + "<graphicClass>Graphic_Single</graphicClass>" + "</graphicData>" + "<thingClass>CombatExtended.BulletCE</thingClass>" + "<label>" + projectile.label + "</label>" + "<projectile Class='CombatExtended.ProjectilePropertiesCE'>" + "<damageDef>Bullet</damageDef>" + "<speed>" + projpropsCE.speed.ToString() + "</speed>" + "<dropsCasings>true</dropsCasings>" + "<damageAmountBase>" + projectile.GetModExtension<BulletModExtension>().FixedDamage.ToString() + "</damageAmountBase>" + "<armorPenetrationSharp>" + projpropsCE.armorPenetrationSharp.ToString() + "</armorPenetrationSharp>" + "<armorPenetrationBlunt>" + projpropsCE.armorPenetrationBlunt.ToString() + "</armorPenetrationBlunt>" + "<secondaryDamage><li><def>" + projpropsCE.secondaryDamage.First().def + "</def><amount>" + projpropsCE.secondaryDamage.First().amount + "</amount></li></secondaryDamage></projectile>" + "</ThingDef></Defs>"); //Your string here
+                        //Log.Message("amogussy");
+                        doc3.LoadXml("<Defs><ThingDef><defName>" + projectile.defName + "</defName>" + "<tickerType>Normal</tickerType>" + "<graphicData>" + "<texPath>" + projectile.graphicData.texPath + "</texPath>" + "<graphicClass>Graphic_Single</graphicClass>" + "</graphicData>" + "<thingClass>CombatExtended.BulletCE</thingClass>" + "<label>" + projectile.label + "</label>" + "<projectile Class='CombatExtended.ProjectilePropertiesCE'>" + "<damageDef>Bullet</damageDef>" + "<speed>" + projpropsCE.speed.ToString() + "</speed>" + "<dropsCasings>true</dropsCasings>" + "<damageAmountBase>" + Math.Round(projectile.GetModExtension<BulletModExtension>().FixedDamage).ToString() + "</damageAmountBase>" + "<armorPenetrationSharp>" + projpropsCE.armorPenetrationSharp.ToString() + "</armorPenetrationSharp>" + "<armorPenetrationBlunt>" + projpropsCE.armorPenetrationBlunt.ToString() + "</armorPenetrationBlunt>" + "<secondaryDamage><li><def>" + projpropsCE.secondaryDamage.First().def + "</def><amount>" + projpropsCE.secondaryDamage.First().amount + "</amount></li></secondaryDamage></projectile>" + "</ThingDef></Defs>"); //Your string here
                     }
                     else
                     {
                         if (projectile.comps?.Any(K => K is CompProperties_Fragments) ?? false)
                         {
-                            Log.Error("test test test");
+                            //Log.Error("test test test");
                             CompProperties_Fragments kurwa = projectile.comps.Find(G => G is CompProperties_Fragments) as CompProperties_Fragments;
                             if (kurwa != null)
                             {
-                                Log.Message("test");
-                                doc3.LoadXml("<Defs><ThingDef><defName>" + projectile.defName + "</defName>" + "<tickerType>Normal</tickerType>" + "<graphicData>" + "<texPath>" + projectile.graphicData.texPath + "</texPath>" + "<graphicClass>Graphic_Single</graphicClass>" + "</graphicData>" + "<thingClass>CombatExtended.BulletCE</thingClass>" + "<label>" + projectile.label + "</label>" + "<projectile Class='CombatExtended.ProjectilePropertiesCE'>" + "<damageDef>Bullet</damageDef>" + "<speed>" + projpropsCE.speed.ToString() + "</speed>" + "<dropsCasings>true</dropsCasings>" + "<damageAmountBase>" + projectile.GetModExtension<BulletModExtension>().FixedDamage.ToString() + "</damageAmountBase>" + "<armorPenetrationSharp>" + projpropsCE.armorPenetrationSharp.ToString() + "</armorPenetrationSharp>" + "<armorPenetrationBlunt>" + projpropsCE.armorPenetrationBlunt.ToString() + "</armorPenetrationBlunt>" + "</projectile>" + "<comps><li Class='CombatExtended.CompProperties_Fragments'><fragments>" +
+                                //Log.Message("test");
+                                doc3.LoadXml("<Defs><ThingDef><defName>" + projectile.defName + "</defName>" + "<tickerType>Normal</tickerType>" + "<graphicData>" + "<texPath>" + projectile.graphicData.texPath + "</texPath>" + "<graphicClass>Graphic_Single</graphicClass>" + "</graphicData>" + "<thingClass>CombatExtended.BulletCE</thingClass>" + "<label>" + projectile.label + "</label>" + "<projectile Class='CombatExtended.ProjectilePropertiesCE'>" + "<damageDef>Bullet</damageDef>" + "<speed>" + projpropsCE.speed.ToString() + "</speed>" + "<dropsCasings>true</dropsCasings>" + "<damageAmountBase>" + Math.Round(projectile.GetModExtension<BulletModExtension>().FixedDamage).ToString() + "</damageAmountBase>" + "<armorPenetrationSharp>" + projpropsCE.armorPenetrationSharp.ToString() + "</armorPenetrationSharp>" + "<armorPenetrationBlunt>" + projpropsCE.armorPenetrationBlunt.ToString() + "</armorPenetrationBlunt>" + "</projectile>" + "<comps><li Class='CombatExtended.CompProperties_Fragments'><fragments>" +
                                  "<" + kurwa.fragments.First().thingDef.defName + ">" + kurwa.fragments.First().count + "</" + kurwa.fragments.First().thingDef.defName + ">" + "</fragments></li></comps>" + "</ThingDef></Defs>"); //Your string here
                             }
 
@@ -386,12 +389,12 @@ namespace HandLoading
                         {
                             if (projpropsCE.pelletCount >= 2)
                             {
-                                Log.Message("amogus 3");
-                                doc3.LoadXml("<Defs><ThingDef><defName>" + projectile.defName + "</defName>" + "<tickerType>Normal</tickerType>" + "<graphicData>" + "<texPath>" + "Things/Ammo/Cannon/HE" + "</texPath>" + "<graphicClass>Graphic_Single</graphicClass>" + "</graphicData>" + "<thingClass>CombatExtended.BulletCE</thingClass>" + "<label>" + projectile.label + "</label>" + "<projectile Class='CombatExtended.ProjectilePropertiesCE'><spreadMult>" + projpropsCE.spreadMult.ToString() + "</spreadMult>" + "<damageDef>Bullet</damageDef>" + "<speed>" + projpropsCE.speed.ToString() + "</speed>" + "<dropsCasings>true</dropsCasings>" + "<damageAmountBase>" + projectile.GetModExtension<BulletModExtension>().FixedDamage.ToString() + "</damageAmountBase>" + "<armorPenetrationSharp>" + projpropsCE.armorPenetrationSharp.ToString() + "</armorPenetrationSharp><pelletCount>" + projpropsCE.pelletCount.ToString() + "</pelletCount><armorPenetrationBlunt>" + projpropsCE.armorPenetrationBlunt.ToString() + "</armorPenetrationBlunt>" + "</projectile>" + "</ThingDef></Defs>"); //Your string here
+                                //Log.Message("amogus 3");
+                                doc3.LoadXml("<Defs><ThingDef><defName>" + projectile.defName + "</defName>" + "<tickerType>Normal</tickerType>" + "<graphicData>" + "<texPath>" + "Things/Ammo/Cannon/HE" + "</texPath>" + "<graphicClass>Graphic_Single</graphicClass>" + "</graphicData>" + "<thingClass>CombatExtended.BulletCE</thingClass>" + "<label>" + projectile.label + "</label>" + "<projectile Class='CombatExtended.ProjectilePropertiesCE'><spreadMult>" + projpropsCE.spreadMult.ToString() + "</spreadMult>" + "<damageDef>Bullet</damageDef>" + "<speed>" + projpropsCE.speed.ToString() + "</speed>" + "<dropsCasings>true</dropsCasings>" + "<damageAmountBase>" + Math.Round(projectile.GetModExtension<BulletModExtension>().FixedDamage).ToString() + "</damageAmountBase>" + "<armorPenetrationSharp>" + projpropsCE.armorPenetrationSharp.ToString() + "</armorPenetrationSharp><pelletCount>" + projpropsCE.pelletCount.ToString() + "</pelletCount><armorPenetrationBlunt>" + projpropsCE.armorPenetrationBlunt.ToString() + "</armorPenetrationBlunt>" + "</projectile>" + "</ThingDef></Defs>"); //Your string here
                             }
                             else
                             {
-                                Log.Message("amogus");
+                                //Log.Message("amogus");
                                 doc3.LoadXml("<Defs><ThingDef><defName>" + projectile.defName + "</defName>" + "<tickerType>Normal</tickerType>" + "<graphicData>" + "<texPath>" + projectile.graphicData.texPath + "</texPath>" + "<graphicClass>Graphic_Single</graphicClass>" + "</graphicData>" + "<thingClass>CombatExtended.BulletCE</thingClass>" + "<label>" + projectile.label + "</label>" + "<projectile Class='CombatExtended.ProjectilePropertiesCE'>" + "<damageDef>Bullet</damageDef>" + "<speed>" + projpropsCE.speed.ToString() + "</speed>" + "<dropsCasings>true</dropsCasings>" + "<damageAmountBase>" + (projectile.GetModExtension<BulletModExtension>()?.FixedDamage.ToString() ?? "5") + "</damageAmountBase>" + "<armorPenetrationSharp>" + projpropsCE.armorPenetrationSharp.ToString() + "</armorPenetrationSharp>" + "<armorPenetrationBlunt>" + projpropsCE.armorPenetrationBlunt.ToString() + "</armorPenetrationBlunt>" + "</projectile>" + "</ThingDef></Defs>"); //Your string here
                             }
 
@@ -404,13 +407,13 @@ namespace HandLoading
                 {
                     if (projpropsCE == null)
                     {
-                        Log.Message("how is this even possible");
+                        //Log.Message("how is this even possible");
                     }
                     doc3.LoadXml("<Defs><ThingDef><defName>" + projectile.defName + "</defName>" + "<tickerType>Normal</tickerType>" + "<graphicData>" + "<texPath>" + projectile.graphicData.texPath + "</texPath>" + "<graphicClass>Graphic_Single</graphicClass>" + "</graphicData>" + "<thingClass>CombatExtended.BulletCE</thingClass>" + "<label>" + projectile.label + "</label>" + "<projectile Class='CombatExtended.ProjectilePropertiesCE'>" + "<damageDef>Bullet</damageDef>" + "<speed>" + projpropsCE.speed.ToString() + "</speed>" + "<dropsCasings>true</dropsCasings>" + "<damageAmountBase>" + "5" + "</damageAmountBase>" + "<armorPenetrationSharp>" + projpropsCE.armorPenetrationSharp.ToString() + "</armorPenetrationSharp>" + "<armorPenetrationBlunt>" + projpropsCE.armorPenetrationBlunt.ToString() + "</armorPenetrationBlunt>" + "</projectile>" + "</ThingDef></Defs>"); //Your string here
                 }
                 if (amIthermo | projpropsCE.damageDef.defName == "Thermobaric")
                 {
-                    Log.Warning("test test, works");
+                    //Log.Warning("test test, works");
                     doc3.LoadXml("<Defs><ThingDef><defName>" + projectile.defName + "</defName>" + "<tickerType>Normal</tickerType>" + "<graphicData>" + "<texPath>" + projectile.graphicData.texPath + "</texPath>" + "<graphicClass>Graphic_Single</graphicClass>" + "</graphicData>" + "<thingClass>CombatExtended.BulletCE</thingClass>" + "<label>" + projectile.label + "</label>" + "<projectile Class='CombatExtended.ProjectilePropertiesCE'>" + "<damageDef>Thermobaric</damageDef>" + "<explosionRadius>" + projpropsCE.explosionRadius + "</explosionRadius>" + "<speed>" + projpropsCE.speed.ToString() + "</speed>" + "<dropsCasings>true</dropsCasings>" + "<damageAmountBase>" + projectile.GetModExtension<HandLoading.BulletModExtension>().FixedDamage.ToString() + "</damageAmountBase>" + "<armorPenetrationSharp>" + projpropsCE.armorPenetrationSharp.ToString() + "</armorPenetrationSharp>" + "<armorPenetrationBlunt>" + projpropsCE.armorPenetrationBlunt.ToString() + "</armorPenetrationBlunt>" + "</projectile>" + "</ThingDef></Defs>"); //Your string here
                 }
 
@@ -433,7 +436,7 @@ namespace HandLoading
 
             if (ammo != null && projectile != null && ammoset != null && !npcammo && false)
             {
-                Log.Message("saving patch");
+                //Log.Message("saving patch");
                 XmlDocument doc4 = new XmlDocument();
                 doc4.LoadXml("<Patch><Operation Class='PatchOperationAdd'><xpath>/Defs/CombatExtended.AmmoSetDef[defName='" + ammoset.defName + "']/ammoTypes" + "</xpath><value>" + "<" + ammo.defName + ">" + projectile.defName + "</" + ammo.defName + ">" + "</value></Operation></Patch>"); //Your string here
 
@@ -445,7 +448,7 @@ namespace HandLoading
             }
             if (ammo != null && projectile != null && ammoset != null && npcammo && false)
             {
-                Log.Message("saving patch");
+                //Log.Message("saving patch");
                 XmlDocument doc4 = new XmlDocument();
                 doc4.LoadXml("<Patch><Operation Class='PatchOperationAdd'><xpath>/Defs/CombatExtended.AmmoSetDef[defName='" + ammoset.defName + "']/ammoTypes" + "</xpath><value>" + "<" + ammo.defName + ">" + projectile.defName + "</" + ammo.defName + ">" + "</value></Operation></Patch>"); //Your string here
 
@@ -459,27 +462,21 @@ namespace HandLoading
 
             if (recpe != null)
             {
-                Log.Message("saving recipe");
+                //Log.Message("saving recipe");
                 XmlDocument doc5 = new XmlDocument();
                 ProjectilePropertiesCE projpropsCEr = projectile.projectile as ProjectilePropertiesCE;
                 //&& (recpe.HasModExtension<BootlegExtension>())
                 if (projpropsCEr.secondaryDamage.Count >= 1)
                 {
-                   
-                    doc5.LoadXml("<Defs><RecipeDef ParentName=" + '"' + "AmmoRecipeBase" + '"' + "><defName>" + recpe.defName + "</defName>" + "<label>" + "Make " + ammo.label + "(" + recpe.products.First().count.ToString() + ")" + "</label>" + "<description>Make custom ammo</description>" + "<jobString>Making custom ammunition</jobString>" + "<ingredients><li><filter><thingDefs><li>" + recpe.ingredients.Find(a => a.filter.Allows(CE_ThingDefOf.FSX) | a.filter.Allows(AmmoClassesDefOf.Prometheum)).filter.AnyAllowedDef.defName + "</li>" + "</thingDefs>" + "</filter><count>" + "2" + "</count>" + "</li><li><filter><thingDefs><li>" + recpe.ingredients.First().filter.AnyAllowedDef.defName + "</li>" + "</thingDefs>" + "</filter><count>" + recpe.ingredients.First().GetBaseCount() + "</count>" + "</li>" + "<li><filter>" + "<thingDefs><li>" + recpe.ingredients.Find(a => ThingMaker.MakeThing(a.filter.AnyAllowedDef).TryGetComp<PowderComp>() != null).filter.AnyAllowedDef.defName + "</li></thingDefs></filter><count>" + someamount + "</count></li>" + "<li><filter><thingDefs><li>" + recpe.ingredients.FindAll(a => ThingMaker.MakeThing(a.filter.AnyAllowedDef).TryGetComp<PowderComp>() == null && !a.filter.Allows(CE_ThingDefOf.FSX) && !a.filter.Allows(AmmoClassesDefOf.Prometheum)).Last().filter.AnyAllowedDef.defName + "</li></thingDefs></filter><count>" + recpe.ingredients.First().GetBaseCount() + "</count></li>" + "</ingredients>" + "<fixedIngredientFilter><thingDefs><li>" + recpe.ingredients.FindAll(a => ThingMaker.MakeThing(a.filter.AnyAllowedDef).TryGetComp<PowderComp>() == null && !a.filter.Allows(CE_ThingDefOf.FSX) && !a.filter.Allows(AmmoClassesDefOf.Prometheum)).Last().filter.AnyAllowedDef.defName + "</li></thingDefs></fixedIngredientFilter><products>" + "<" + ammo.defName + ">" + recpe.products.First().count.ToString() + "</" + ammo.defName + ">" + "</products><workAmount>" + recpe.workAmount + "</workAmount></RecipeDef></Defs>"); //Your string here
+                    //Log.Message("test1");
+                    doc5.LoadXml("<Defs><RecipeDef ParentName=" + "'AmmoRecipeBase'" + "><defName>" + recpe.defName + "</defName>" + "<modExtensions>" + "<li Class='HandLoading.UserReAdder'>" + ReUserModExt + "</li>" + "</modExtensions>" + "<label>" + "Make " + ammo.label + "(" + recpe.products.First().count.ToString() + ")" + "</label>" + "<description>Make custom ammo</description>" + "<jobString>Making custom ammunition</jobString>" + "<ingredients><li><filter><thingDefs><li>" + recpe.ingredients.Find(a => a.filter.Allows(CE_ThingDefOf.FSX) | a.filter.Allows(AmmoClassesDefOf.Prometheum)).filter.AnyAllowedDef.defName + "</li>" + "</thingDefs>" + "</filter><count>" + "2" + "</count>" + "</li><li><filter><thingDefs><li>" + recpe.ingredients.First().filter.AnyAllowedDef.defName + "</li>" + "</thingDefs>" + "</filter><count>" + recpe.ingredients.First().GetBaseCount() + "</count>" + "</li>" + "<li><filter>" + "<thingDefs><li>" + recpe.ingredients.Find(a => ThingMaker.MakeThing(a.filter.AnyAllowedDef).TryGetComp<PowderComp>() != null).filter.AnyAllowedDef.defName + "</li></thingDefs></filter><count>" + someamount + "</count></li>" + "<li><filter><thingDefs><li>" + recpe.ingredients.FindAll(a => ThingMaker.MakeThing(a.filter.AnyAllowedDef).TryGetComp<PowderComp>() == null && !a.filter.Allows(CE_ThingDefOf.FSX) && !a.filter.Allows(AmmoClassesDefOf.Prometheum)).Last().filter.AnyAllowedDef.defName + "</li></thingDefs></filter><count>" + recpe.ingredients.First().GetBaseCount() + "</count></li>" + "</ingredients>" + "<fixedIngredientFilter><thingDefs><li>" + recpe.ingredients.FindAll(a => ThingMaker.MakeThing(a.filter.AnyAllowedDef).TryGetComp<PowderComp>() == null && !a.filter.Allows(CE_ThingDefOf.FSX) && !a.filter.Allows(AmmoClassesDefOf.Prometheum)).Last().filter.AnyAllowedDef.defName + "</li></thingDefs></fixedIngredientFilter><products>" + "<" + ammo.defName + ">" + recpe.products.First().count.ToString() + "</" + ammo.defName + ">" + "</products><workAmount>" + recpe.workAmount + "</workAmount></RecipeDef></Defs>"); //Your string here
                     
                 }
                 else
                 {
-                    if (recpe.HasModExtension<BootlegExtension>())
-                    {
-                        //recpe.modExtensions
-                        doc5.LoadXml("<Defs><RecipeDef ParentName=" + '"' + "AmmoRecipeBase" + '"' + "><modExtensions>" + "<li Class='HandLoading.BootlegExtension' />" + "</modExtensions><defName>" + recpe.defName + "</defName>" + "<label>" + "Make " + ammo.label + "(" + recpe.products.First().count.ToString() + ")" + "</label>" + "<description>Make custom ammo</description>" + "<jobString>Making custom ammunition</jobString>" + "<ingredients><li><filter><thingDefs><li>" + recpe.ingredients.First().filter.AnyAllowedDef.defName + "</li>" + "</thingDefs>" + "</filter><count>" + recpe.ingredients.First().GetBaseCount() + "</count>" + "</li>" + "<li><filter>" + "<thingDefs><li>" + recpe.ingredients.Find(a => ThingMaker.MakeThing(a.filter.AnyAllowedDef).TryGetComp<PowderComp>() != null).filter.AnyAllowedDef.defName + "</li></thingDefs></filter><count>" + someamount + "</count></li>" + "<li><filter><thingDefs><li>" + recpe.ingredients.FindAll(a => ThingMaker.MakeThing(a.filter.AnyAllowedDef).TryGetComp<PowderComp>() == null && !a.filter.Allows(CE_ThingDefOf.FSX) && !a.filter.Allows(AmmoClassesDefOf.Prometheum)).Last().filter.AnyAllowedDef.defName + "</li></thingDefs></filter><count>" + recpe.ingredients.First().GetBaseCount() + "</count></li>" + "</ingredients>" + "<fixedIngredientFilter><thingDefs><li>" + recpe.ingredients.FindAll(a => ThingMaker.MakeThing(a.filter.AnyAllowedDef).TryGetComp<PowderComp>() == null && !a.filter.Allows(CE_ThingDefOf.FSX) && !a.filter.Allows(AmmoClassesDefOf.Prometheum)).Last().filter.AnyAllowedDef.defName + "</li></thingDefs></fixedIngredientFilter><products>" + "<" + ammo.defName + ">" + recpe.products.First().count.ToString() + "</" + ammo.defName + ">" + "</products><workAmount>" + recpe.workAmount + "</workAmount></RecipeDef></Defs>"); //Your string here
-                    }
-                    else 
-                    {
-                        doc5.LoadXml("<Defs><RecipeDef ParentName=" + '"' + "AmmoRecipeBase" + '"' + "><defName>" + recpe.defName + "</defName>" + "<label>" + "Make " + ammo.label + "(" + recpe.products.First().count.ToString() + ")" + "</label>" + "<description>Make custom ammo</description>" + "<jobString>Making custom ammunition</jobString>" + "<ingredients><li><filter><thingDefs><li>" + recpe.ingredients.First().filter.AnyAllowedDef.defName + "</li>" + "</thingDefs>" + "</filter><count>" + recpe.ingredients.First().GetBaseCount() + "</count>" + "</li>" + "<li><filter>" + "<thingDefs><li>" + recpe.ingredients.Find(a => ThingMaker.MakeThing(a.filter.AnyAllowedDef).TryGetComp<PowderComp>() != null).filter.AnyAllowedDef.defName + "</li></thingDefs></filter><count>" + someamount + "</count></li>" + "<li><filter><thingDefs><li>" + recpe.ingredients.FindAll(a => ThingMaker.MakeThing(a.filter.AnyAllowedDef).TryGetComp<PowderComp>() == null && !a.filter.Allows(CE_ThingDefOf.FSX) && !a.filter.Allows(AmmoClassesDefOf.Prometheum)).Last().filter.AnyAllowedDef.defName + "</li></thingDefs></filter><count>" + recpe.ingredients.First().GetBaseCount() + "</count></li>" + "</ingredients>" + "<fixedIngredientFilter><thingDefs><li>" + recpe.ingredients.FindAll(a => ThingMaker.MakeThing(a.filter.AnyAllowedDef).TryGetComp<PowderComp>() == null && !a.filter.Allows(CE_ThingDefOf.FSX) && !a.filter.Allows(AmmoClassesDefOf.Prometheum)).Last().filter.AnyAllowedDef.defName + "</li></thingDefs></fixedIngredientFilter><products>" + "<" + ammo.defName + ">" + recpe.products.First().count.ToString() + "</" + ammo.defName + ">" + "</products><workAmount>" + recpe.workAmount + "</workAmount></RecipeDef></Defs>"); //Your string here
-                    }
+
+                    doc5.LoadXml("<Defs><RecipeDef ParentName=" + "'AmmoRecipeBase'" + "><modExtensions>" + "<li Class='HandLoading.BootlegExtension' />" + "<li Class='HandLoading.UserReAdder'>" + ReUserModExt + "</li>" + "</modExtensions><defName>" + recpe.defName + "</defName>" + "<label>" + "Make " + ammo.label + "(" + recpe.products.First().count.ToString() + ")" + "</label>" + "<description>Make custom ammo</description>" + "<jobString>Making custom ammunition</jobString>" + "<ingredients><li><filter><thingDefs><li>" + recpe.ingredients.First().filter.AnyAllowedDef.defName + "</li>" + "</thingDefs>" + "</filter><count>" + recpe.ingredients.First().GetBaseCount() + "</count>" + "</li>" + "<li><filter>" + "<thingDefs><li>" + recpe.ingredients.Find(a => ThingMaker.MakeThing(a.filter.AnyAllowedDef).TryGetComp<PowderComp>() != null).filter.AnyAllowedDef.defName + "</li></thingDefs></filter><count>" + someamount + "</count></li>" + "<li><filter><thingDefs><li>" + recpe.ingredients.FindAll(a => ThingMaker.MakeThing(a.filter.AnyAllowedDef).TryGetComp<PowderComp>() == null && !a.filter.Allows(CE_ThingDefOf.FSX) && !a.filter.Allows(AmmoClassesDefOf.Prometheum)).Last().filter.AnyAllowedDef.defName + "</li></thingDefs></filter><count>" + recpe.ingredients.First().GetBaseCount() + "</count></li>" + "</ingredients>" + "<fixedIngredientFilter><thingDefs><li>" + recpe.ingredients.FindAll(a => ThingMaker.MakeThing(a.filter.AnyAllowedDef).TryGetComp<PowderComp>() == null && !a.filter.Allows(CE_ThingDefOf.FSX) && !a.filter.Allows(AmmoClassesDefOf.Prometheum)).Last().filter.AnyAllowedDef.defName + "</li></thingDefs></fixedIngredientFilter><products>" + "<" + ammo.defName + ">" + recpe.products.First().count.ToString() + "</" + ammo.defName + ">" + "</products><workAmount>" + recpe.workAmount + "</workAmount></RecipeDef></Defs>"); //Your string here
+                    
                    
                 }
 
@@ -495,7 +492,101 @@ namespace HandLoading
 
         }
 
+        public void SaveFHL(FactionHandLoad FHL)
+        {
+            Log.Message("1");
+            if (FHL != null)
+            {
+                Log.Message("1A");
+                if (FHL.ammo != null && FHL.defName != null)
+                {
+                    Log.Message("1ABC");
+                    if (FHL.Faction != null)
+                    {
+                        Log.Message("1ABCD");
+                        string workingDirectory = Environment.CurrentDirectory;
+                        Log.Message("1ABCDE");
+                        if (workingDirectory != null)
+                        {
+                            Log.Message("2ABC");
+                            if (Directory.GetParent(workingDirectory).Parent != null)
+                            {
+                                Log.Message("3ABC");
+                                if (Directory.GetParent(workingDirectory).Parent.FullName != null)
+                                {
+                                    Log.Message("4ABC");
+                                    string actualpath = Directory.GetParent(workingDirectory).Parent.FullName + "/workshop/content/294100/2548930569/Defs";
+                                    if (actualpath != null)
+                                    {
+                                        if (Directory.Exists(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/Hand-Loading"))
+                                        {
+                                            //Log.Message("saved ammo in github version files");
+                                            actualpath = Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/Hand-Loading/Defs";
+                                        }
+                                        if (Directory.Exists(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/2548930569"))
+                                        {
+                                            //Log.Message("saved ammo in rimpy version files");
 
+                                            actualpath = Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/2548930569/Defs";
+                                        }
+                                        if (Directory.Exists(Directory.GetParent(workingDirectory).Parent.FullName + "/workshop/content/294100/2548930569/Defs"))
+                                        {
+                                            //Log.Message("saved ammo in steam version files");
+                                            actualpath = Directory.GetParent(workingDirectory).Parent.FullName + "/workshop/content/294100/2548930569/Defs";
+                                        }
+                                        if (Directory.Exists(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer"))
+                                        {
+                                            //Log.Message("saved ammo in container files. The messages are fucked, this is definitely the actual one");
+                                            actualpath = Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer/Defs";
+                                        }
+                                        Log.Message("5ABC");
+                                        string text = "<Defs><HandLoading.FactionHandLoad>";
+                                        Log.Message("6ABC");
+
+                                        FieldInfo[] fields = typeof(FactionHandLoad).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                                        foreach (FieldInfo field in fields)
+                                        {
+                                            if ((field?.Name ?? null) != null)
+                                            {
+                                                if (field.GetValue(FHL) != null)
+                                                {
+                                                    if (field.Name == "ammo" | field.Name == "defName" | field.Name == "Faction")
+                                                    {
+                                                        text += ("<" + field.Name + ">") + field.GetValue(FHL) + ("</" + field.Name + ">");
+                                                    }
+                                                }
+
+                                            }
+
+
+                                        }
+                                        Log.Message("7ABC");
+
+                                        text += "</HandLoading.FactionHandLoad></Defs>";
+
+                                        XmlDocument doc5 = new XmlDocument();
+
+                                        actualpath += "/saves/";
+
+                                        doc5.LoadXml(text);
+
+                                        XmlTextWriter writer5 = new XmlTextWriter(actualpath + "saveidksavesave" + Rand.Range(0, 56709723).ToString() + ".xml", null);
+
+                                        writer5.Formatting = Formatting.Indented;
+                                        doc5.Save(writer5);
+                                    }
+                                }
+                            }
+                            
+                        }
+                    }
+                }
+            }
+           
+               
+            
+           
+        }
 
         public int abc;
         public string ammolabel;
@@ -511,7 +602,7 @@ namespace HandLoading
         {
             foreach (AmmoDef amder in DefDatabase<AmmoDef>.AllDefsListForReading.FindAll(t => t.modExtensions != null && t.HasModExtension<modextmisc>()))
             {
-                //Log.Message(amder.label);
+                ////Log.Message(amder.label);
                 amder.GetModExtension<modextmisc>().upset.ammoTypes.Add(new AmmoLink {ammo = amder, projectile = amder.GetModExtension<modextmisc>().prjder});
             }
         }
@@ -530,7 +621,7 @@ namespace HandLoading
         static FuckedPatchRemover()
         {
             List<PatchOperation> patches = Verse.LoadedModManager.RunningModsListForReading.Find(F => F.Name == "Hand loads [Beta]").Patches.ToList();
-            Log.Message(Verse.LoadedModManager.RunningModsListForReading.Find(F => F.Name == "Hand loads [Beta]").RootDir);
+            //Log.Message(Verse.LoadedModManager.RunningModsListForReading.Find(F => F.Name == "Hand loads [Beta]").RootDir);
             foreach (PatchOperationAdd patch in patches)
             {
                 string tring = System.IO.File.ReadAllText(patch.sourceFile);
@@ -543,7 +634,7 @@ namespace HandLoading
                     {
                         string amogus = sub;
                         string[] sub2 = sub.Split('<');
-                        //Log.Message($"Substring: {amogus}");
+                        ////Log.Message($"Substring: {amogus}");
                         foreach (string sub44 in sub2)
                         {
 
@@ -553,15 +644,15 @@ namespace HandLoading
                                 string[] sub3 = sub44.Split('>');
                                 foreach (string sub444 in sub3)
                                 {
-                                    //Log.Message($"{sub444}");
+                                    ////Log.Message($"{sub444}");
                                     if (DefDatabase<AmmoDef>.AllDefsListForReading.Any(pp => pp.defName == sub444) | DefDatabase<ThingDef>.AllDefsListForReading.Any(pp => pp.defName == sub444))
                                     {
-                                        //Log.Error("exists");
+                                        ////Log.Error("exists");
                                     }
                                     else
                                     {
                                         
-                                        Log.Error("doesn't exist: " + patch.sourceFile);
+                                        //Log.Error("doesn't exist: " + patch.sourceFile);
                                         File.Delete(patch.sourceFile);
                                     }
                                 }
@@ -576,7 +667,7 @@ namespace HandLoading
 
 
                 }
-                //Log.Message(tring);
+                ////Log.Message(tring);
             }
             
         }

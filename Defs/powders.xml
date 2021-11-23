@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
+
 <!--=============== Industrial powder ====================-->
 
   <ThingDef ParentName="ResourceBase">
@@ -30,10 +31,11 @@
     <useHitPoints>true</useHitPoints>
     <statBases>
       <PowderPower>1</PowderPower>
-      <MarketValue>400</MarketValue>
+      <MarketValue>180</MarketValue>
       <MaxHitPoints>100</MaxHitPoints>
       <Mass>2</Mass>
       <Flammability>3.2</Flammability>
+      <Explodability>1</Explodability>
     </statBases>
     <thingCategories>
       <li>Items</li>
@@ -88,7 +90,7 @@
       <Chemfuel>50</Chemfuel>
       <ComponentIndustrial>1</ComponentIndustrial>
     </costList>
-    <description>Improved Smokeless Powder. Slightly more powerful</description>
+    <description>Improved Smokeless Powder. Slightly more powerful, but less stable</description>
     <graphicData>
       <texPath>Things/Powders/ind2</texPath>
       <graphicClass>Graphic_StackCount</graphicClass>
@@ -103,6 +105,7 @@
       <MaxHitPoints>100</MaxHitPoints>
       <Mass>2</Mass>
       <Flammability>9.2</Flammability>
+      <Explodability>1.20</Explodability>
     </statBases>
     <thingCategories>
       <li>HandsLoadedAmmo</li>
@@ -152,11 +155,12 @@
     <soundDrop>Metal_Drop</soundDrop>
     <useHitPoints>true</useHitPoints>
     <statBases>
-      <PowderPower>1</PowderPower>
-      <MarketValue>400</MarketValue>
+      <PowderPower>0.65</PowderPower>
+      <MarketValue>100</MarketValue>
       <MaxHitPoints>100</MaxHitPoints>
       <Mass>2</Mass>
       <Flammability>3.2</Flammability>
+      <Explodability>0.35</Explodability>
     </statBases>
     <thingCategories>
       <li>Items</li>
@@ -176,25 +180,38 @@
    <!--=============== Archotech powder ====================-->
 
    <ThingDef ParentName="ResourceBase">
-    <defName>Archotechiumpowdered</defName>
+    <defName>Spacer_Powder_weed</defName>
     <label>Archotech powder</label>
-    <stackLimit>5</stackLimit>
-   
-    <description>Archotech powder. No one knows what is it made of</description>
+    <stackLimit>25</stackLimit>
+    <description>Archotech powder. Extremely powerful, composed mostly of pure hydrogen, but somehow stable in room temperature in solid state</description>
     <graphicData>
       <texPath>Things/Powders/arch</texPath>
       <graphicClass>Graphic_StackCount</graphicClass>
     </graphicData>
+    <recipeMaker>
+      <skillRequirements>
+        <Crafting>16</Crafting>
+      </skillRequirements>
+      <researchPrerequisite>spacerpowder</researchPrerequisite>
+      <recipeUsers Inherit="False">
+        <li>AmmoBench</li>
+      </recipeUsers>
+    </recipeMaker>
+    <costList>
+      <Chemfuel>350</Chemfuel>
+      <ComponentIndustrial>5</ComponentIndustrial>
+    </costList>
     <resourceReadoutPriority>Middle</resourceReadoutPriority>
     <soundInteract>Metal_Drop</soundInteract>
     <soundDrop>Metal_Drop</soundDrop>
     <useHitPoints>true</useHitPoints>
     <statBases>
-      <PowderPower>3</PowderPower>
-      <MarketValue>69420</MarketValue>
+      <PowderPower>4.5</PowderPower>
+      <MarketValue>5000</MarketValue>
       <MaxHitPoints>100</MaxHitPoints>
       <Mass>0.5</Mass>
       <Flammability>3.2</Flammability>
+      <Explodability>3</Explodability>
     </statBases>
     <thingCategories>
       <li>Items</li>
@@ -204,7 +221,7 @@
     <techLevel>Ultra</techLevel>
     <tradeTags>
       <li>ExoticMisc</li>
-     
+      <li>Artifact</li>
     </tradeTags>
     <thingSetMakerTags>
       <li>RewardStandardHighFreq</li>

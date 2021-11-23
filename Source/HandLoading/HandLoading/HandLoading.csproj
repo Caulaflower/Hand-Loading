@@ -85,11 +85,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AmmoManufacturingPlantComp.cs" />
     <Compile Include="CalculUtils.cs" />
-    <Compile Include="messier.cs" />
     <Compile Include="gotodriver.cs" />
     <Compile Include="messer.cs" />
     <Compile Include="MyTab.cs" />
+    <Compile Include="namer.cs" />
     <Compile Include="ShapeDefs.cs" />
     <Compile Include="crab.cs" />
     <Compile Include="Custom Caliber stuff\Caliber Creator.cs" />

@@ -13,6 +13,11 @@
         <techlevel>Industrial</techlevel>
         <dmgusestatpawn>true</dmgusestatpawn>
         <penusestatpawn>false</penusestatpawn>
+        <Users>
+            
+         <li>AmmoBench</li>
+        </Users>
+        <AI_cost_mult>1.2</AI_cost_mult>
     </HandLoading.RecipeShapeDef>
 
     <HandLoading.RecipeShapeDef>
@@ -23,6 +28,10 @@
         <damagemult>0.5</damagemult>
         <workmult>2</workmult>
         <techlevel>Industrial</techlevel>
+        <Users>
+         <li>AmmoBench</li>
+        </Users>
+        <AI_cost_mult>1</AI_cost_mult>
     </HandLoading.RecipeShapeDef>
 
     <HandLoading.RecipeShapeDef>
@@ -30,10 +39,16 @@
         <label>PS</label>
         <needed>s7n6s</needed>
         <penmult>1.7</penmult>
-        <damagemult>1.6</damagemult>
-        <workmult>3</workmult>
+        <damagemult>1.3</damagemult>
+        <workmult>7</workmult>
         <techlevel>Industrial</techlevel>
         <dmgusestatpawn>true</dmgusestatpawn>
+        <Users>
+            
+         <li>AmmoBench</li>
+        </Users>
+        <AI_cost_mult>1.5</AI_cost_mult>
+        <popcount>50</popcount>
     </HandLoading.RecipeShapeDef>
 
     <HandLoading.RecipeShapeDef>
@@ -44,7 +59,48 @@
         <damagemult>1</damagemult>
         <techlevel>Industrial</techlevel>
         <penusestatpawn>false</penusestatpawn>
+        <AI_cost_mult>0.8</AI_cost_mult>
+        <Users>
+            
+         <li>AmmoBench</li>
+        </Users>
     </HandLoading.RecipeShapeDef>
+
+    <HandLoading.RecipeShapeDef>
+      <defName>duplexo</defName>
+      <label>duplex</label>
+      <needed>HandLoading</needed>
+      <penmult>1</penmult>
+      <damagemult>0.56</damagemult>
+      <workmult>12</workmult>
+      <techlevel>Spacer</techlevel>
+      <spreadmult>3.1</spreadmult>
+      <pelletcount>2</pelletcount>
+      <Users>
+          
+       <li>AmmoBench</li>
+      </Users>
+      <popcount>100</popcount>
+      <AI_cost_mult>2.0</AI_cost_mult>
+  </HandLoading.RecipeShapeDef>
+
+  <HandLoading.RecipeShapeDef>
+    <defName>triplexo_ammmo</defName>
+    <label>triplex</label>
+    <needed>3plexRound</needed>
+    <penmult>0.70</penmult>
+    <damagemult>0.45</damagemult>
+    <workmult>16</workmult>
+    <techlevel>Spacer</techlevel>
+    <spreadmult>5.2</spreadmult>
+    <pelletcount>3</pelletcount>
+    <Users>
+        
+     <li>AmmoBench</li>
+    </Users>
+    <popcount>50</popcount>
+    <AI_cost_mult>3.5</AI_cost_mult>
+</HandLoading.RecipeShapeDef>
 
     <HandLoading.RecipeShapeDef>
         <defName>buckshit</defName>
@@ -56,6 +112,11 @@
         <spreadmult>17.9</spreadmult>
         <techlevel>Medieval</techlevel>
         <penusestatpawn>false</penusestatpawn>
+        <Users>
+            
+         <li>AmmoBench</li>
+        </Users>
+        <popcount>200</popcount>
     </HandLoading.RecipeShapeDef>
 
     <HandLoading.RecipeShapeDef>
@@ -68,6 +129,12 @@
         <spreadmult>36.9</spreadmult>
         <techlevel>Industrial</techlevel>
         <dmgusestatpawn>true</dmgusestatpawn>
+        <Users>
+          
+         <li>AmmoBench</li>
+        </Users>
+        <popcount>150</popcount>
+        <AI_cost_mult>1.5</AI_cost_mult>
     </HandLoading.RecipeShapeDef>
 
     <HandLoading.RecipeShapeDef>
@@ -78,6 +145,12 @@
         <damagemult>0.25</damagemult>
         <workmult>6</workmult>
         <techlevel>Spacer</techlevel>
+        <Users>
+            
+         <li>AmmoBench</li>
+        </Users>
+        <popcount>100</popcount>
+        <AI_cost_mult>1.85</AI_cost_mult>
     </HandLoading.RecipeShapeDef>
 
     <HandLoading.RecipeShapeDef>
@@ -89,6 +162,12 @@
         <isfrag>true</isfrag>
         <ismulti>true</ismulti>
         <techlevel>Industrial</techlevel>
+        <Users>
+            
+         <li>AmmoBench</li>
+        </Users>
+        <popcount>5</popcount>
+        <AI_cost_mult>1.5</AI_cost_mult>
     </HandLoading.RecipeShapeDef>
     
 
@@ -108,50 +187,14 @@
         <damagemult>0.25</damagemult>
         <isbootleq>true</isbootleq>
         <techlevel>Neolithic</techlevel>
+        <Users>
+          <li>AmmoBench</li>
+          <li>CraftingSpot</li>
+        </Users>
+        <AI_cost_mult>0.5</AI_cost_mult>
     </HandLoading.RecipeShapeDef>
 
-    <JobDef>
-        <defName>gotospot</defName>
-        <driverClass>HandLoading.haul_to_spot</driverClass>
-        <reportString>Hauling hand loads to TargetA.</reportString>
-        <casualInterruptible>false</casualInterruptible>
-    </JobDef>
-
-
-    <ThingDef ParentName="BuildingBase">
-        <defName>HLspot</defName>
-        <label>hand loads storing spot</label>
-        <description>Hand loading.</description>
-        <thingClass>Building</thingClass>
-        <graphicData>
-          <texPath>Things/Building/Production/CraftingSpot</texPath>
-          <graphicClass>Graphic_Single</graphicClass>
-          <drawSize>(1,1)</drawSize>
-        </graphicData>
-        <altitudeLayer>FloorEmplacement</altitudeLayer>
-        <statBases>
-          <WorkToBuild>0</WorkToBuild>
-          <WorkTableWorkSpeedFactor>0.5</WorkTableWorkSpeedFactor>
-        </statBases>
-        <scatterableOnMapGen>false</scatterableOnMapGen>
-        <useHitPoints>false</useHitPoints>
-        <size>(1,1)</size>
-        <designationCategory>Production</designationCategory>
-        <passability>Standable</passability>
-        <hasInteractionCell>True</hasInteractionCell>
-        <interactionCellOffset>(0,0,-1)</interactionCellOffset>
-        <surfaceType>Item</surfaceType>
-        <building>
-          <spawnedConceptLearnOpportunity>BillsTab</spawnedConceptLearnOpportunity>
-          <sowTag>SupportPlantsOnly</sowTag>
-          <canPlaceOverImpassablePlant>false</canPlaceOverImpassablePlant>
-          <ai_chillDestination>false</ai_chillDestination>
-          <artificialForMeditationPurposes>false</artificialForMeditationPurposes>
-          <buildingTags>
-            <li>Production</li>
-          </buildingTags>
-        </building>
-      </ThingDef>
+    
 
 
 
@@ -170,7 +213,14 @@
         <isfrag>true</isfrag>
         <ismulti>true</ismulti>
         <ThermoBar>true</ThermoBar>
+        <Users>
+            
+         <li>AmmoBench</li>
+        </Users>
+        <popcount>5</popcount>
+        <AI_cost_mult>1.75</AI_cost_mult>
     </HandLoading.RecipeShapeDef>
+
         
 
 </Defs>

@@ -17,6 +17,8 @@ namespace HandLoading
 
 		public static ThingDef Prometheum;
 
+		public static StatDef Explodability;
+
 		public static DamageDef Thermobaric;
 
 		public static ResearchProjectDef CE_AdvancedAmmo;
@@ -78,16 +80,16 @@ namespace HandLoading
 					   BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
 			foreach (FieldInfo dd in fieldsproj)
 			{
-				//Log.Message(dd.Name);
+				////Log.Message(dd.Name);
 				dd.SetValue(fragc1.projectile, dd.GetValue(AmmoClassesDefOf.Fragment_Large.projectile));
 			}
 			float powderpower = powder.statBases.Find(oo => oo.stat.defName == "PowderPower").value;
-			//Log.Message(powderpower.ToString());
+			////Log.Message(powderpower.ToString());
 			ProjectilePropertiesCE atak = (ProjectilePropertiesCE)fragc1.projectile;
 			atak.armorPenetrationSharp = 1 * material.statBases.Find(pp => pp.stat == StatDefOf.StuffPower_Armor_Sharp).value * powderpower * material.statBases.Find(pp => pp.stat == StatDefOf.Mass).value;
 			atak.armorPenetrationBlunt = 10 * material.statBases.Find(pp => pp.stat == StatDefOf.Mass).value * powderpower;
-			Log.Message(atak.armorPenetrationSharp.ToString() + "ap sharp");
-			Log.Message(atak.armorPenetrationBlunt.ToString() + "ap blunt");
+			//Log.Message(atak.armorPenetrationSharp.ToString() + "ap sharp");
+			//Log.Message(atak.armorPenetrationBlunt.ToString() + "ap blunt");
 			fragc1.label = material + " fragments";
 			fragc1.defName = "truten" + Rand.Range(0, 670).ToString() + "trzmiel" + Rand.Range(0, 670).ToString() + "bak";
 
@@ -107,7 +109,7 @@ namespace HandLoading
 				}
 				PelCount = (int)(Math.Round(Convert.ToInt32(test) / 18.5) * 21);
 				pelcal = 6.1f;
-				Log.Message(test);
+				//Log.Message(test);
 			}
 
 		}
@@ -186,7 +188,7 @@ namespace HandLoading
 				float crafty = (desigboy.skills.skills.Find(TT => TT.def == SkillDefOf.Crafting).Level) / 10.0f;
 				float idktbh = (shooty + crafty);
 				abc = idktbh;
-				//Log.Message("skillmult: " + idktbh.ToString());
+				////Log.Message("skillmult: " + idktbh.ToString());
 				return abc;
 			}
 		}
@@ -222,7 +224,7 @@ namespace HandLoading
 			Penmult2 = propelant.statBases.Find(abc => abc.stat.defName == "PowderPower").value;
 			if (Penmult2 == 0f)
 			{
-				//Log.Error("propelant most likely has no PowderPower statbase");
+				////Log.Error("propelant most likely has no PowderPower statbase");
 			}
 
 
@@ -238,7 +240,7 @@ namespace HandLoading
 			{
 				ArmorPenSharpCalculated = (float)((propsCE?.armorPenetrationSharp ?? 1) + (ShapeDoubleAP * hardness_material_multiplier) * Penmult2 * this.ChargeAmount * skillmult);
 			}
-			Log.Message(ArmorPenSharpCalculated.ToString());
+			//Log.Message(ArmorPenSharpCalculated.ToString());
 
 		}
 		public void CalculateAP2()
@@ -250,7 +252,7 @@ namespace HandLoading
 			Penmult2 = propelant.statBases.Find(abc => abc.stat.defName == "PowderPower").value;
 			if (Penmult2 == 0f)
 			{
-				//Log.Error("propelant most likely has no PowderPower statbase");
+				////Log.Error("propelant most likely has no PowderPower statbase");
 			}
 
 
@@ -274,7 +276,7 @@ namespace HandLoading
 				}
 				
 			}
-			Log.Message(ArmorPenSharpCalculated.ToString());
+			//Log.Message(ArmorPenSharpCalculated.ToString());
 
 		}
 
@@ -289,7 +291,7 @@ namespace HandLoading
 				ArmorPenBluntCalculated = ArmorPenSharpCalculated * 6f * projectile_material.statBases.Find(tt33 => tt33.stat == StatDefOf.Mass).value;
 			}
 
-			Log.Message(ArmorPenBluntCalculated.ToString());
+			//Log.Message(ArmorPenBluntCalculated.ToString());
 		}
 		public ThingDef propelant;
 
@@ -343,15 +345,14 @@ namespace HandLoading
 			List<AmmoDef> shlist = new List<AmmoDef>();
 			if (!isexplosiveprojectile)
 			{
-				shlist = DefDatabase<AmmoDef>.AllDefs.ToList().FindAll(deffer => deffer.Users.Count > 0 && deffer.ammoClass == AmmoClassesDefOf.FullMetalJacket | deffer.ammoClass == AmmoClassesDefOf.MusketBall | deffer.ammoClass.defName == "Slug");
+				shlist = DefDatabase<AmmoDef>.AllDefsListForReading.FindAll(deffer => deffer.Users.Count > 0 && deffer.ammoClass == AmmoClassesDefOf.FullMetalJacket | deffer.ammoClass == AmmoClassesDefOf.MusketBall | deffer.ammoClass.defName == "Slug");
+				//shlist.AddRange(DefDatabase<AmmoDef>.AllDefsListForReading.FindAll(gaugeshell => gaugeshell != null && gaugeshell.ammoClass != null && gaugeshell.ammoClass.defName == "Slug"));
 			}
 			else
 			{
-				shlist = DefDatabase<AmmoDef>.AllDefs.ToList().FindAll(deffer => deffer.Users.Count > 0 && deffer.ammoClass.defName == "GrenadeHE");
-				shlist.Add(DefDatabase<AmmoDef>.AllDefs.ToList().Find(gaugeshell => gaugeshell.defName == "Ammo_12Gauge_Buck"));
-				// && kurwakurwakurwa.fragments.Find(ghjb => ghjb.thingDef == AmmoClassesDefOf.Fragment_Large) != null
-
-				//shlist.Add(DefDatabase<AmmoDef>.AllDefs.ToList().Find(LKHKF => LKHKF.defName == "Ammo_30x29mmGrenade_HE"));
+				shlist = DefDatabase<AmmoDef>.AllDefsListForReading.FindAll(deffer => deffer.Users.Count > 0 && deffer.ammoClass.defName == "GrenadeHE");
+				shlist.AddRange(DefDatabase<AmmoDef>.AllDefsListForReading.FindAll(gaugeshell => gaugeshell != null && gaugeshell.ammoClass != null && gaugeshell.ammoClass.defName == "Slug"));
+				
 			}
 
 
@@ -363,7 +364,7 @@ namespace HandLoading
 					this.ammoclass_selected = ammodef.AmmoSetDefs.Find(dod => dod.ammoTypes != null);
 					this.SelectedProjectile = ammoclass_selected?.ammoTypes?.Find(A => A.ammo == ammodef_selected).projectile;
 					calibers = ammodef.AmmoSetDefs;
-					Log.Message($"Chosen ammo def: {SelectedProjectile}, {ammodef_selected}.");
+					//Log.Message($"Chosen ammo def: {SelectedProjectile}, {ammodef_selected}.");
 					sometextureidk = ammodef_selected.uiIcon;
 					if (ammodef.ammoClass.defName == "BuckShot" | ammodef.ammoClass.defName == "GrenadeHE")
 					{
@@ -381,6 +382,11 @@ namespace HandLoading
 				});
 
 				options.Add(floatmenuoption);
+			}
+
+			if (isexplosiveprojectile)
+			{
+				options.Add(new FloatMenuOption("DO NOT USE flechette/buckshot cartridges with indirect fire calibers".Colorize(Color.red), null));
 			}
 			Find.WindowStack.Add(new FloatMenu(options));
 		}
@@ -405,7 +411,7 @@ namespace HandLoading
 			{
 			};
 
-			List<ThingDef> somelist = DefDatabase<ThingDef>.AllDefs.ToList().Where<ThingDef>(L => L.stuffProps?.categories?.Contains(StuffCategoryDefOf.Metallic) is true).ToList();
+			List<ThingDef> somelist = DefDatabase<ThingDef>.AllDefsListForReading.Where<ThingDef>(L => L.stuffProps?.categories?.Contains(StuffCategoryDefOf.Metallic) is true).ToList();
 
 			foreach (ThingDef szteel in somelist)
 			{
@@ -440,11 +446,11 @@ namespace HandLoading
 			{
 			};
 
-			List<ThingDef> somelist = DefDatabase<ThingDef>.AllDefs.ToList().Where(L => L.stuffProps?.categories?.Contains(StuffCategoryDefOf.Metallic) == true).ToList();
+			List<ThingDef> somelist = DefDatabase<ThingDef>.AllDefsListForReading.Where(L => L.stuffProps?.categories?.Contains(StuffCategoryDefOf.Metallic) == true).ToList();
 			somelist.Add(ThingDefOf.Chemfuel);
 			if ((actualshape?.isbootleq ?? true))
 			{
-				Log.Message("bee");
+				//Log.Message("bee");
 				somelist = new List<ThingDef>();
 				somelist.Add(ThingDefOf.Steel);
 			}
@@ -479,12 +485,12 @@ namespace HandLoading
 			var options3 = new List<FloatMenuOption>
 			{
 			};
-			StatDef state = DefDatabase<StatDef>.AllDefs.ToList().Find(loop => loop.defName == "PowderPower");
-			Log.Message(state?.defName ?? "co kurwa");
-			List<ThingDef> somelister = DefDatabase<ThingDef>.AllDefs.ToList().FindAll(l => l.comps.Any(L => L is PowderCompProps));
+			StatDef state = DefDatabase<StatDef>.AllDefsListForReading.Find(loop => loop.defName == "PowderPower");
+			//Log.Message(state?.defName ?? "co kurwa");
+			List<ThingDef> somelister = DefDatabase<ThingDef>.AllDefsListForReading.FindAll(l => l.comps.Any(L => L is PowderCompProps));
 			if (somelister?.Count == 0)
 			{
-				somelister = DefDatabase<ThingDef>.AllDefs.ToList().FindAll(l => l.statBases.Any(koof => koof.stat == state));
+				somelister = DefDatabase<ThingDef>.AllDefsListForReading.FindAll(l => l.statBases.Any(koof => koof.stat == state));
 			}
 
 
@@ -670,7 +676,7 @@ namespace HandLoading
 			}
 			else
 			{
-				//Log.Message(SelectedProjectile?.projectile.GetDamageAmount(1).ToString());
+				////Log.Message(SelectedProjectile?.projectile.GetDamageAmount(1).ToString());
 				aproxdmg = (float)Math.Round(DamageMult * (SelectedProjectile?.projectile.GetDamageAmount(1) ?? 0f) * (ChargeAmount) * (propelant?.statBases.Find(pp => pp.stat.defName == "PowderPower").value ?? 69f) * skillmultrelative);
 			}
 
@@ -699,7 +705,7 @@ namespace HandLoading
 				Penmult2 = propelant?.statBases.Find(abc => abc.stat.defName == "PowderPower").value ?? 0f;
 				if (Penmult2 == 0f)
 				{
-					//Log.Error("propelant most likely has no PowderPower statbase");
+					////Log.Error("propelant most likely has no PowderPower statbase");
 				}
 
 
@@ -751,7 +757,7 @@ namespace HandLoading
 			List<RecipeShapeDef> shapes = new List<RecipeShapeDef>();
 			if (!isexplosiveprojectile)
 			{
-				foreach (RecipeShapeDef recshapedef in DefDatabase<RecipeShapeDef>.AllDefs.ToList().FindAll(TT => TT.needed.IsFinished && TT.ismulti == false))
+				foreach (RecipeShapeDef recshapedef in DefDatabase<RecipeShapeDef>.AllDefsListForReading.FindAll(TT => TT.needed.IsFinished && TT.ismulti == false))
 				{
 					shapes.Add(recshapedef);
 				}
@@ -764,7 +770,7 @@ namespace HandLoading
 			}
 			else
 			{
-				foreach (RecipeShapeDef recshapedef in DefDatabase<RecipeShapeDef>.AllDefs.ToList().FindAll(TT => TT.needed.IsFinished && TT.ismulti))
+				foreach (RecipeShapeDef recshapedef in DefDatabase<RecipeShapeDef>.AllDefsListForReading.FindAll(TT => TT.needed.IsFinished && TT.ismulti))
 				{
 					shapes.Add(recshapedef);
 				}
@@ -822,6 +828,7 @@ namespace HandLoading
 		}
 
 		//action for finish button. probably longer that the one for stats
+		///idk what I meant here
 		public void finish_action()
 		{
 			++pint;
@@ -833,11 +840,7 @@ namespace HandLoading
 			{
 				CalculateAP2();
 			}
-			if (actualshape.pelletcount > 1)
-			{
-				ProjectilePropertiesCE meth = MadeProjectile.projectile as ProjectilePropertiesCE;
-				meth.pelletCount = actualshape.pelletcount;
-			}
+		
 
 
 
@@ -848,7 +851,7 @@ namespace HandLoading
 
 			if (actualshape.defName == "pronershape")
 			{
-				ThingDef poopboner = DefDatabase<ThingDef>.AllDefs.ToList().Find(tt33 => tt33.defName == "vcghjkilokjbhvg");
+				ThingDef poopboner = DefDatabase<ThingDef>.AllDefsListForReading.Find(tt33 => tt33.defName == "vcghjkilokjbhvg");
 				MadeProjectile = new ThingDef() { tickerType = TickerType.Normal, graphic = poopboner.graphic, label = projectile_material.label + " " + ammoclass_selected.label + " " + ProjectileShape, defName = $"GeneratedDef_Projectile{pint}" + "a" + Rand.Range(0, 256790333).ToString() + "v", graphicData = poopboner.graphicData, projectile = new ProjectilePropertiesCE() { damageDef = DamageDefOf.Bullet, armorPenetrationSharp = ArmorPenSharpCalculated, armorPenetrationBlunt = ArmorPenSharpCalculated * 6 * projectile_material.statBases.Find(ree => ree.stat == StatDefOf.Mass).value, speed = 150f, flyOverhead = false, ai_IsIncendiary = false, dropsCasings = true, pelletCount = 1, stoppingPower = 2.5f }, thingClass = AmmoClassesDefOf.testshit.thingClass };
 			}
 			else
@@ -880,7 +883,7 @@ namespace HandLoading
 				caliber.ammoTypes.Add(new AmmoLink() { ammo = MadeAmmoDef, projectile = MadeProjectile });
 				foreach (AmmoLink amlink in ammoclass_selected.ammoTypes)
 				{
-					//Log.Error(caliber.ToString());
+					////Log.Error(caliber.ToString());
 				}
 			}
 			if (ProjectileShape == "Duplex")
@@ -904,7 +907,7 @@ namespace HandLoading
 			ThingFilter filter2 = new ThingFilter();
 			filter2.AllowedThingDefs.ToList().Add(casematerial);
 			filter2.SetAllow(casematerial, true);
-			//Log.Error(filter.AllowedDefCount.ToString());
+			////Log.Error(filter.AllowedDefCount.ToString());
 			if (actualshape == null)
 			{
 				CalculateDamage();
@@ -916,9 +919,9 @@ namespace HandLoading
 			List<IngredientCount> ingredientss = new List<IngredientCount>();
 			IngredientCount ingredient1 = new IngredientCount() { filter = filter };
 			IngredientCount ingredient2 = new IngredientCount() { filter = filter2 };
-			ingredient1.SetBaseCount(DefDatabase<RecipeDef>.AllDefs.ToList().Find(A => A.defName == "Make" + ammodef_selected.defName).ingredients.Find(B => B.GetBaseCount() != 0).GetBaseCount() / 2);
+			ingredient1.SetBaseCount(DefDatabase<RecipeDef>.AllDefsListForReading.Find(A => A.defName == "Make" + ammodef_selected.defName).ingredients.Find(B => B.GetBaseCount() != 0).GetBaseCount() / 2);
 			ingredientss.Add(ingredient1);
-			ingredient2.SetBaseCount(DefDatabase<RecipeDef>.AllDefs.ToList().Find(A => A.defName == "Make" + ammodef_selected.defName).ingredients.Find(B => B.GetBaseCount() != 0).GetBaseCount() / 2);
+			ingredient2.SetBaseCount(DefDatabase<RecipeDef>.AllDefsListForReading.Find(A => A.defName == "Make" + ammodef_selected.defName).ingredients.Find(B => B.GetBaseCount() != 0).GetBaseCount() / 2);
 			ingredientss.Add(ingredient2);
 
 			ThingFilter filter3 = new ThingFilter();
@@ -932,9 +935,9 @@ namespace HandLoading
 			ingredient3.SetBaseCount(ChargeAmount);
 			ingredientss.Add(ingredient3);
 
-			List<ThingDef> users = new List<ThingDef>();
+			//List<ThingDef> users = new List<ThingDef>();
 			//users.Add(AmmoClassesDefOf.CraftingSpot);
-			users.Add(CE_ThingDefOf.AmmoBench);
+			//users.Add(CE_ThingDefOf.AmmoBench);
 
 			RecipeDef makeammorecipe = new RecipeDef
 			{
@@ -942,13 +945,13 @@ namespace HandLoading
 				workSkill = SkillDefOf.Crafting,
 				fixedIngredientFilter = filter,
 				ingredients = ingredientss,
-				workAmount = (DefDatabase<RecipeDef>.AllDefs.ToList().Find(A => A.defName == "Make" + ammodef_selected.defName).workAmount * actualshape.workmult),
+				workAmount = (DefDatabase<RecipeDef>.AllDefsListForReading.Find(A => A.defName == "Make" + ammodef_selected.defName).workAmount * actualshape.workmult),
 				jobString = "Making ammo",
 				effectWorking = EffecterDefOf.Clean,
 				label = "Make" + " " + MadeAmmoDef.label,
 				workSpeedStat = StatDefOf.GeneralLaborSpeed,
 				defName = "Make" + MadeAmmoDef.defName,
-				recipeUsers = users,
+				recipeUsers = actualshape.Users,
 				unfinishedThingDef = AmmoClassesDefOf.UnfinishedAmmo,
 				defaultIngredientFilter = filter,
 
@@ -957,23 +960,35 @@ namespace HandLoading
 
 			};
 			RecipeDefGenerator.ImpliedRecipeDefs().ToList().Add(makeammorecipe);
-			List<Building> benchesidk = mpaa.listerBuildings.AllBuildingsColonistOfDef(CE_ThingDefOf.AmmoBench).ToList();
-			if (benchesidk.Count >= 1)
+			//makeammorecipe.recipeUsers.AddRange(actualshape.Users);
+			////Log.Message("abcdefgfvgbhnhwa");
+			foreach (ThingDef def in actualshape.Users)
 			{
-				benchesidk.RandomElement().def.AllRecipes.Add(makeammorecipe);
-				foreach (Building a in benchesidk)
+				////Log.Message(def?.label ?? "how the fuck");
+				if (def != null)
 				{
-					//Log.Error(makeammorecipe.defName);
-
+					if (def.recipes != null)
+					{
+						////Log.Message("12345");
+						def.recipes.Add(makeammorecipe);
+					}
+					else
+					{
+						////Log.Message("54321");
+						def.recipes = new List<RecipeDef> { makeammorecipe };
+					}
 				}
+				
+				
 			}
+			////Log.Message("abcdefgwww2");
 
-			//Log.Error(mpaa.ToString());
-			//Log.Error(postition.ToString());
+			////Log.Error(mpaa.ToString());
+			////Log.Error(postition.ToString());
 			MadeAmmoDef.selectable = true;
 			MadeAmmoDef.stackLimit = 500;
 
-			//Log.Error(MadeAmmoDef.statBases.Find(ABC => ABC.stat.defName == "Mass").value.ToString());
+			////Log.Error(MadeAmmoDef.statBases.Find(ABC => ABC.stat.defName == "Mass").value.ToString());
 			MadeAmmoDef.statBases = new List<StatModifier>();
 			MadeAmmoDef.statBases.RemoveAll(OO => OO.stat == StatDefOf.Mass);
 			MadeAmmoDef.statBases.Add(new StatModifier
@@ -981,19 +996,19 @@ namespace HandLoading
 				stat = StatDefOf.Mass,
 				value = ammodef_selected.statBases.Find(rtar => rtar.stat == StatDefOf.Mass).value * (casematerial.statBases.Find(rtar => rtar.stat == StatDefOf.Mass).value)
 			});
-			Log.Message("mass 0: " + ammodef_selected.statBases.Find(LL => LL.stat == StatDefOf.Mass).value.ToString());
-			Log.Message("mass: " + MadeAmmoDef.statBases.Find(LL => LL.stat == StatDefOf.Mass).value.ToString());
+			//Log.Message("mass 0: " + ammodef_selected.statBases.Find(LL => LL.stat == StatDefOf.Mass).value.ToString());
+			//Log.Message("mass: " + MadeAmmoDef.statBases.Find(LL => LL.stat == StatDefOf.Mass).value.ToString());
 			foreach (StatModifier amongsussybaka in MadeAmmoDef.statBases)
 			{
-				//Log.Error(amongsussybaka.value.ToString());
+				
 			}
 			float athink = 0f;
 
-			athink = (ChargeAmount * propelant.statBases.Find(Poof => Poof.stat.defName == "PowderPower").value) / 10;
+			athink = (ChargeAmount * propelant.statBases.Find(Poof => Poof.stat == AmmoClassesDefOf.Explodability).value) / 10;
 
 
 
-			Log.Message(athink.ToString() + "testing");
+			//Log.Message(athink.ToString() + "testing");
 
 			MadeAmmoDef.comps.Add(new damagercproprs { dammpoints = athink });
 			MadeAmmoDef.useHitPoints = true;
@@ -1078,13 +1093,13 @@ namespace HandLoading
 				makeammorecipe.products.First().count = 5;
 			}
 			List<ThingCategoryDef> thingCategories = new List<ThingCategoryDef>();
-			thingCategories.Add(DefDatabase<ThingCategoryDef>.AllDefs.ToList().Find(G => G.defName == "HandsLoadedAmmo"));
-			DefDatabase<ThingCategoryDef>.AllDefs.ToList().Find(G => G.defName == "HandsLoadedAmmo").childThingDefs.Add(MadeAmmoDef);
-			//DefDatabase<ThingCategoryDef>.AllDefs.ToList().Find(G => G.defName == "HandsLoadedAmmo").
+			thingCategories.Add(DefDatabase<ThingCategoryDef>.AllDefsListForReading.Find(G => G.defName == "HandsLoadedAmmo"));
+			DefDatabase<ThingCategoryDef>.AllDefsListForReading.Find(G => G.defName == "HandsLoadedAmmo").childThingDefs.Add(MadeAmmoDef);
+			//DefDatabase<ThingCategoryDef>.AllDefsListForReading.Find(G => G.defName == "HandsLoadedAmmo").
 			MadeAmmoDef.thingCategories = thingCategories;
-			foreach (ThingDef thing in DefDatabase<ThingCategoryDef>.AllDefs.ToList().Find(G => G.defName == "HandsLoadedAmmo").childThingDefs)
+			foreach (ThingDef thing in DefDatabase<ThingCategoryDef>.AllDefsListForReading.Find(G => G.defName == "HandsLoadedAmmo").childThingDefs)
 			{
-				//Log.Error(thing.label);
+				////Log.Error(thing.label);
 			}
 			MadeAmmoDef.comps.Add(new CompProperties { compClass = typeof(HaulComp) });
 			MadeAmmoDef.alwaysHaulable = true;
@@ -1105,13 +1120,13 @@ namespace HandLoading
 			{
 				proce.pelletCount = 1;
 			}
-			if (actualshape.isbootleq)
-			{
-				Log.Error("dudus");
-				AmmoClassesDefOf.CraftingSpot.AllRecipes.Add(makeammorecipe);
-				makeammorecipe.modExtensions = new List<DefModExtension>();
-				makeammorecipe.modExtensions.Add(new BootlegExtension { isthisreallyneedtbh = false });
-			}
+			//if (actualshape.isbootleq)
+			//{
+				////Log.Error("dudus");
+				//AmmoClassesDefOf.CraftingSpot.AllRecipes.Add(makeammorecipe);
+				//makeammorecipe.modExtensions = new List<DefModExtension>();
+				//makeammorecipe.modExtensions.Add(new BootlegExtension { isthisreallyneedtbh = false });
+			//}
 			tryfix();
 			MadeAmmoDef.alwaysHaulable = true;
 
@@ -1134,26 +1149,49 @@ namespace HandLoading
 			MadeAmmoDef.graphicData.color = clor;
 			MadeAmmoDef.graphic.color = clor;
 
+			var projce2 = (ProjectilePropertiesCE)MadeProjectile.projectile;
+			projce2.pelletCount = actualshape.pelletcount;
+
+			FieldInfo[] fuck_the_minus_one = typeof(ProjectileProperties).GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+			foreach (FieldInfo fuck in fuck_the_minus_one)
+			{
+				////Log.Message(fuck.Name.Colorize(UnityEngine.Color.blue));
+				if (fuck.Name == "damageAmountBase")
+				{
+					////Log.Error("cghjchjc vujdfgjhjkd;wa");
+					fuck.SetValue(MadeProjectile.projectile, (int)DamageCalculated);
+				}
+			}
+
+			
+			if (actualshape.pelletcount > 1)
+			{
+				ProjectilePropertiesCE meth = MadeProjectile.projectile as ProjectilePropertiesCE;
+				meth.pelletCount = actualshape.pelletcount;
+				meth.spreadMult = meth.pelletCount * actualshape.spreadmult;
+			}
+
+			makeammorecipe.products.First().count = actualshape.popcount;
+
+			foreach (ThingDef def in actualshape.Users)
+			{
+				//Log.Message(def.label);
+			}
+
+
+			//CE_ThingDefOf.AmmoBench.AllRecipes.Add(makeammorecipe);
+			foreach (ThingDef thingdef in actualshape.Users)
+			{
+				thingdef.AllRecipes.Add(makeammorecipe);
+			}
+
 			Find.World.GetComponent<SaverComp>().SaveAmmodef(MadeAmmoDef, MadeAmmoDef.ammoClass, MadeProjectile, ammoclass_selected, makeammorecipe, ChargeAmount, smolshrab, athink, actualshape.isbootleq, actualshape.ThermoBar);
 
+		
 
 
 
-			List<Zone> bone = new List<Zone>();
-			//bone = Find.CurrentMap.zoneManager.AllZones.FindAll(OOF => OOF is Zone_Stockpile); 
-			foreach (Zone_Stockpile zonee in bone)
-			{
-				Zone_Stockpile cockpile = zonee as Zone_Stockpile;
-				cockpile.settings.filter.AllowedThingDefs.AddItem(MadeAmmoDef);
-				cockpile.settings.filter.SetAllow(MadeAmmoDef, true);
-				List<ThingDef> things = new List<ThingDef>();
-				things.Add(MadeAmmoDef);
-				cockpile.settings.filter = new ThingFilter { };
-				cockpile.settings.filter.AllowedThingDefs.AddItem(MadeAmmoDef);
-				cockpile.settings.filter.SetAllow(MadeAmmoDef, true);
-				//Log.Message(cockpile.settings.filter.Allows(MadeAmmoDef).ToString() + "a,p");
-				//Log.Error(cockpile.settings.filter.AllowedThingDefs.ToList().Find(o => o == MadeAmmoDef).ToString() + cockpile.label);
-			}
+		
 
 
 
@@ -1254,7 +1292,7 @@ namespace HandLoading
 				{
 
 					cunt++;
-					//Log.Error(cunt.ToString());
+					////Log.Error(cunt.ToString());
 				}
 				Rect rectfragsmalltwo = new Rect(inRect);
 				rectfragsmalltwo.width = 33f;
@@ -1617,44 +1655,44 @@ namespace HandLoading
 			{
 				DamageMult = SelectedProjectile.projectile.GetDamageAmount(1f) * 2;
 
-				Log.Message(DamageMult.ToString());
+				//Log.Message(DamageMult.ToString());
 			}
 			if (ProjectileShape == "Armor piercing")
 			{
 				DamageMult = SelectedProjectile.projectile.GetDamageAmount(1f) / 2;
 
-				Log.Message(DamageMult.ToString());
+				//Log.Message(DamageMult.ToString());
 			}
 			if (ProjectileShape == "Full Metal Jacket")
 			{
 				DamageMult = SelectedProjectile.projectile.GetDamageAmount(1f);
 
-				Log.Message(DamageMult.ToString());
+				//Log.Message(DamageMult.ToString());
 			}
 			if (ProjectileShape == "Duplex")
 			{
 				DamageMult = SelectedProjectile.projectile.GetDamageAmount(1f) / 2;
 
-				Log.Message(DamageMult.ToString());
+				//Log.Message(DamageMult.ToString());
 			}
 			if (ProjectileShape == "Sabot")
 			{
 				DamageMult = SelectedProjectile.projectile.GetDamageAmount(1f) / 2;
 
-				Log.Message(DamageMult.ToString());
+				//Log.Message(DamageMult.ToString());
 			}
 			if (projectile_material.label == "Korwinium" && ammodef_selected.ammoClass == AmmoClassesDefOf.MusketBall)
 			{
 				DamageMult += 240;
-				Log.Error(DamageMult.ToString());
+				//Log.Error(DamageMult.ToString());
 			}
 			float Damagemult2 = new float();
 
-			//Log.Error(propelant.statBases.Find(abc => abc.stat.defName == "PowderPower").value.ToString());
+			////Log.Error(propelant.statBases.Find(abc => abc.stat.defName == "PowderPower").value.ToString());
 			Damagemult2 = propelant.statBases.Find(abc => abc.stat.defName == "PowderPower").value;
 			if (Damagemult2 == 0f)
 			{
-				//Log.Error("propelant most likely has no PowderPower statbase");
+				////Log.Error("propelant most likely has no PowderPower statbase");
 			}
 			if (ProjectileShape == "Buckshot")
 			{
@@ -1682,11 +1720,11 @@ namespace HandLoading
 
 			float Damagemult2 = new float();
 
-			//Log.Error(propelant.statBases.Find(abc => abc.stat.defName == "PowderPower").value.ToString());
+			////Log.Error(propelant.statBases.Find(abc => abc.stat.defName == "PowderPower").value.ToString());
 			Damagemult2 = propelant.statBases.Find(abc => abc.stat.defName == "PowderPower").value;
 			if (Damagemult2 == 0f)
 			{
-				//Log.Error("propelant most likely has no PowderPower statbase");
+				////Log.Error("propelant most likely has no PowderPower statbase");
 			}
 			if (ProjectileShape == "Buckshot")
 			{
@@ -1789,7 +1827,7 @@ namespace HandLoading
 
 		public override void Initialize(CompProperties props)
 		{
-			Log.Message("Initialized.");
+			//Log.Message("Initialized.");
 
 		}
 	}

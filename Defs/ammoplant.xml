@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+    <WorldObjectDef Name="Settlement_Ammo">
+        <expandingIconTexture>Things/Powders/improvedpowder</expandingIconTexture>
+        <defName>Ammo_Man_Plant</defName>
+        <label>Ammo manufacturing plant</label>
+        <description>An ammo manufacturing plant of one of the factions.</description>
+        <worldObjectClass>Settlement</worldObjectClass>
+        <expandingIcon>true</expandingIcon>
+        <expandingIconPriority>10</expandingIconPriority>
+        <canBePlayerHome>true</canBePlayerHome>
+        <comps>
+          <li Class="WorldObjectCompProperties_Abandon" />
+          <li Class="WorldObjectCompProperties_TradeRequest" />
+          <li Class="WorldObjectCompProperties_FormCaravan" />
+          <li Class="WorldObjectCompProperties_TimedDetectionRaids" />
+          <li Class="WorldObjectCompProperties_EnterCooldown" />
+          <li><compClass>HandLoading.ManufacturingPlant</compClass></li>
+        </comps>
+      </WorldObjectDef>
+
+      <!--
+      <WorldGenStepDef>
+        <defName>ammo_plants</defName>
+        <order>1209</order>
+        <worldGenStep Class="HandLoading.WorldGenStep_AmmoPlants"/>
+      </WorldGenStepDef>-->
+
+</Defs>

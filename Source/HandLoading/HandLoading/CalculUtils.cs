@@ -21,7 +21,7 @@ namespace HandLoading
         public static List<ThingDef> materials()
         {
             List<ThingDef> amogus = new List<ThingDef>();
-            amogus = DefDatabase<ThingDef>.AllDefs.ToList().FindAll(L => L.stuffProps?.categories?.Contains(StuffCategoryDefOf.Metallic) is true);
+            amogus = DefDatabase<ThingDef>.AllDefsListForReading.FindAll(L => L.stuffProps?.categories?.Contains(StuffCategoryDefOf.Metallic) is true);
             return amogus;
         }
         public static ThingDef material()
@@ -31,7 +31,7 @@ namespace HandLoading
         public static List<ThingDef> powders()
         {
             List<ThingDef> amogus = new List<ThingDef>();
-            amogus = DefDatabase<ThingDef>.AllDefs.ToList().FindAll(OOPP => OOPP.comps.Any(OO => OO is PowderCompProps));
+            amogus = DefDatabase<ThingDef>.AllDefsListForReading.FindAll(OOPP => OOPP.comps.Any(OO => OO is PowderCompProps));
             return amogus;
         }
         public static ThingDef powder()
@@ -82,15 +82,15 @@ namespace HandLoading
             Penmult2 = propelant.statBases.Find(abc => abc.stat.defName == "PowderPower")?.value ?? 0f;
             if (Penmult2 == 0f)
             {
-                Log.Error("propelant most likely has no PowderPower statbase");
+                //Log.Error("propelant most likely has no PowderPower statbase");
             }
             float hardness_material_multiplier = material.statBases.Find(Peepee => Peepee.stat == StatDefOf.StuffPower_Armor_Sharp).value;
 
 
 
             PenNN = (float)((propsCE?.armorPenetrationSharp ?? 1) + (ShapeDoubleAP * hardness_material_multiplier) * Penmult2 * Rand.Range(1f, 3f));
-            Log.Message(projbase.ToString());
-            Log.Message(PenNN.ToString());
+            //Log.Message(projbase.ToString());
+            //Log.Message(PenNN.ToString());
         }
 
         public static void CalDam(ThingDef propelant, ref int Damm, string shap, ThingDef baseproj)
@@ -122,16 +122,16 @@ namespace HandLoading
             Penmult2 = propelant.statBases.Find(abc => abc.stat.defName == "PowderPower")?.value ?? 0f;
             if (Penmult2 == 0f)
             {
-                Log.Error("propelant most likely has no PowderPower statbase");
+                //Log.Error("propelant most likely has no PowderPower statbase");
             }
             //float hardness_material_multiplier = material.statBases.Find(Peepee => Peepee.stat == StatDefOf.StuffPower_Armor_Sharp).value;
-            Log.Message(propelant.label);
+            //Log.Message(propelant.label);
             //float dmg = new float();
 
             Damm = (int)Math.Round(DammNult * baseproj.projectile.GetDamageAmount(0.8f) * propelant.statBases.Find(PePe => PePe.stat.defName == "PowderPower").value * (Rand.Range(1, 3)));
             //PenNN = (float)((propsCE?.armorPenetrationSharp ?? 1) + (ShapeDoubleAP * hardness_material_multiplier) * Penmult2 * Rand.Range(1f, 3f));
-            //Log.Message(projbase.ToString());
-            Log.Message(Damm.ToString());
+            ////Log.Message(projbase.ToString());
+            //Log.Message(Damm.ToString());
         }
     }
 }

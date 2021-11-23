@@ -35,7 +35,7 @@ namespace HandLoading.CustomCalibers
             Scribe_Collections.Look(ref compams, "comampssa", LookMode.Reference, LookMode.Def);
             foreach (KeyValuePair<ThingWithComps, AmmoSetDef> valuepear in compams)
             {
-                Log.Message(valuepear.Key.Label);
+                //Log.Message(valuepear.Key.Label);
             }
             base.ExposeData();
         }
@@ -45,7 +45,7 @@ namespace HandLoading.CustomCalibers
             {
                 foreach (KeyValuePair<ThingWithComps, AmmoSetDef> valuepear in compams)
                 {
-                    Log.Message(valuepear.Key.Label + " readding caliber conversion");
+                    //Log.Message(valuepear.Key.Label + " readding caliber conversion");
                     rechangecaliber(valuepear.Key, valuepear.Value);
                 }
             }
@@ -94,26 +94,26 @@ namespace HandLoading.CustomCalibers
 
             if (Widgets.ButtonText(trec, "Choose parent case: "))
             {
-                List<AmmoDef> ammos = DefDatabase<AmmoDef>.AllDefs.ToList();
+                List<AmmoDef> ammos = DefDatabase<AmmoDef>.AllDefsListForReading;
                 ammos.RemoveAll(C => C.defName != "Ammo_556x45mmNATO_FMJ");
-                ammos.Add(DefDatabase<AmmoDef>.AllDefs.ToList().Find(K => K.defName == "Ammo_762x54mmR_FMJ"));
+                ammos.Add(DefDatabase<AmmoDef>.AllDefsListForReading.Find(K => K.defName == "Ammo_762x54mmR_FMJ"));
                 List<FloatMenuOption> floatmenus = new List<FloatMenuOption>();
                 foreach (AmmoDef ammo in ammos)
                 {
                     FloatMenuOption flot = new FloatMenuOption(ammo.label, delegate
                     {
-                        Log.Message(ammo.defName);
+                        //Log.Message(ammo.defName);
                         string tink = GetNumbers(ammo.defName);
                         string tink2 = GetNumbers(ammo.defName);
 
 
-                        Log.Message(tink);
-                        Log.Message(tink.First().ToString());
+                        //Log.Message(tink);
+                        //Log.Message(tink.First().ToString());
                         dimY = Convert.ToInt32(tink2.Substring(3, 2));
                         if (Convert.ToInt32(tink.First().ToString()) < 9)
                         {
                             tink = tink.Remove(3, 2);
-                            Log.Message(tink + "afafafa");
+                            //Log.Message(tink + "afafafa");
                             dimX = Convert.ToInt32(tink);
                         }
 
@@ -226,20 +226,20 @@ namespace HandLoading.CustomCalibers
         {
             float kek = ((dimX * dimY) / (762f * 51f)) * 20f;
             dimage = kek;
-            Log.Message(kek.ToString());
+            //Log.Message(kek.ToString());
         }
 
         public void calpen()
         {
             float keker = ((dimX * dimY) / (762f * 51f) * 7f);
             sharppen = (float)Math.Round(keker);
-            Log.Message(sharppen.ToString());
+            //Log.Message(sharppen.ToString());
         }
 
         //make this an util later
         public void makeammo(float dmg)
         {
-            Log.Message(dmg.ToString());
+            //Log.Message(dmg.ToString());
         }
 
 
@@ -269,38 +269,38 @@ namespace HandLoading.CustomCalibers
            BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
             AmmoDef amdef = new AmmoDef();
             ThingDef projectile = new ThingDef();
-            //var smth = DefDatabase<ThingDef>.AllDefs.ToList().Find(P => P.defName == "Bullet_762x51mmNATO_FMJ");
+            //var smth = DefDatabase<ThingDef>.AllDefsListForReading.Find(P => P.defName == "Bullet_762x51mmNATO_FMJ");
             //projectile = smth.clone
             foreach (FieldInfo fi in fields)
             {
-                fi.SetValue(projectile, fi.GetValue(DefDatabase<ThingDef>.AllDefs.ToList().Find(P => P.defName == "Bullet_556x45mmNATO_FMJ")));
+                fi.SetValue(projectile, fi.GetValue(DefDatabase<ThingDef>.AllDefsListForReading.Find(P => P.defName == "Bullet_556x45mmNATO_FMJ")));
             }
             projectile.defName = Rand.Range(0, 256789) + "e" + Rand.Range(0, 30) + "ee" + Rand.Range(0, 30) + "ammosetdef" + dims;
             projectile.label = dims + "Bullet (FMJ)";
             projectile.thingClass = typeof(HandLoading.Bullet);
             projectile.modExtensions = new List<DefModExtension>();
             projectile.modExtensions.Add(new HandLoading.BulletModExtension { FixedDamage = dmg });
-            projectile.graphicData = DefDatabase<ThingDef>.AllDefs.ToList().Find(P => P.defName == "Bullet_762x51mmNATO_FMJ").graphicData;
-            projectile.graphic = DefDatabase<ThingDef>.AllDefs.ToList().Find(P => P.defName == "Bullet_762x51mmNATO_FMJ").graphic;
+            projectile.graphicData = DefDatabase<ThingDef>.AllDefsListForReading.Find(P => P.defName == "Bullet_762x51mmNATO_FMJ").graphicData;
+            projectile.graphic = DefDatabase<ThingDef>.AllDefsListForReading.Find(P => P.defName == "Bullet_762x51mmNATO_FMJ").graphic;
             amdef.drawGUIOverlay = true;
 
 
             foreach (FieldInfo fi in fields)
             {
-                fi.SetValue(amdef, fi.GetValue(DefDatabase<ThingDef>.AllDefs.ToList().Find(P => P.defName == "Ammo_556x45mmNATO_FMJ")));
+                fi.SetValue(amdef, fi.GetValue(DefDatabase<ThingDef>.AllDefsListForReading.Find(P => P.defName == "Ammo_556x45mmNATO_FMJ")));
             }
             amdef.defName = Rand.Range(0, 256789) + "e" + Rand.Range(0, 30) + "ee" + Rand.Range(0, 30) + "ammosetdef" + dims;
             AmmoSetDef amsetdef = new AmmoSetDef();
             amsetdef.label = dims;
             amsetdef.defName = Rand.Range(0, 256789) + "e" + Rand.Range(0, 30) + "ee" + Rand.Range(0, 30) + "ammosetdef" + dims;
             amsetdef.ammoTypes = new List<AmmoLink>();
-            amdef.ammoClass = DefDatabase<AmmoCategoryDef>.AllDefs.ToList().Find(L => L.defName == "FullMetalJacket");
+            amdef.ammoClass = DefDatabase<AmmoCategoryDef>.AllDefsListForReading.Find(L => L.defName == "FullMetalJacket");
             amsetdef.ammoTypes.Add(new AmmoLink(amdef, projectile));
             amdef.description += "Actual damage  is: " + dmg.ToString();
             amdef.thingClass = typeof(AmmoThing);
-            amdef.graphicData = DefDatabase<ThingDef>.AllDefs.ToList().Find(P => P.defName == "Ammo_556x45mmNATO_FMJ").graphicData;
-            amdef.graphic = DefDatabase<ThingDef>.AllDefs.ToList().Find(P => P.defName == "Ammo_556x45mmNATO_FMJ").graphic;
-            amdef.uiIcon = DefDatabase<ThingDef>.AllDefs.ToList().Find(P => P.defName == "Ammo_556x45mmNATO_FMJ").uiIcon;
+            amdef.graphicData = DefDatabase<ThingDef>.AllDefsListForReading.Find(P => P.defName == "Ammo_556x45mmNATO_FMJ").graphicData;
+            amdef.graphic = DefDatabase<ThingDef>.AllDefsListForReading.Find(P => P.defName == "Ammo_556x45mmNATO_FMJ").graphic;
+            amdef.uiIcon = DefDatabase<ThingDef>.AllDefsListForReading.Find(P => P.defName == "Ammo_556x45mmNATO_FMJ").uiIcon;
             projectile.projectile = new ProjectilePropertiesCE
             {
                 speed = 150f,
@@ -311,7 +311,7 @@ namespace HandLoading.CustomCalibers
             };
             foreach (AmmoLink alink in amsetdef.ammoTypes)
             {
-                Log.Error(alink.ammo.ToString());
+                //Log.Error(alink.ammo.ToString());
             }
             DefDatabase<AmmoSetDef>.Add(amsetdef);
             //amdef.
@@ -323,7 +323,7 @@ namespace HandLoading.CustomCalibers
             Thing m = new Thing();
             somefink.stackCount = 500;
             GenThing.TryDropAndSetForbidden(somefink, Find.CurrentMap.mapPawns.FreeColonists.RandomElement().Position, Find.CurrentMap, ThingPlaceMode.Direct, out m, false);
-            Log.Error(m.Position.ToString());
+            //Log.Error(m.Position.ToString());
 
 
         }
@@ -345,7 +345,7 @@ namespace HandLoading.CustomCalibers
                     {
                         field.SetValue(amuser, field.GetValue(t.TryGetComp<CompAmmoUser>().Props));
                     }
-                    amuser.ammoSet = DefDatabase<AmmoSetDef>.AllDefs.ToList().FindAll(k => k.defName.Contains("ee")).RandomElement();
+                    amuser.ammoSet = DefDatabase<AmmoSetDef>.AllDefsListForReading.FindAll(k => k.defName.Contains("ee")).RandomElement();
                     t.TryGetComp<CompAmmoUser>().props = amuser;
                     if (Find.World.GetComponent<CaliberRecreator>().compams == null)
                     {

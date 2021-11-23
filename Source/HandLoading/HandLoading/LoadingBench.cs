@@ -56,7 +56,7 @@ namespace HandLoading
         }
         public override IEnumerable<FloatMenuOption> CompFloatMenuOptions(Pawn selPawn)
         {
-            yield return new FloatMenuOption("hand load ammo", delegate { selPawn.jobs.StartJob(new Verse.AI.Job { def = DefDatabase<JobDef>.AllDefs.ToList().Find(TT => TT.defName == "gotobench"), targetA = this.parent }, Verse.AI.JobCondition.InterruptForced); });
+            yield return new FloatMenuOption("hand load ammo", delegate { selPawn.jobs.StartJob(new Verse.AI.Job { def = DefDatabase<JobDef>.AllDefsListForReading.Find(TT => TT.defName == "gotobench"), targetA = this.parent }, Verse.AI.JobCondition.InterruptForced); });
         }
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
         {
@@ -70,7 +70,7 @@ namespace HandLoading
                     defaultDesc = "design your own new ammunition",
                     icon = ContentFinder<Texture2D>.Get("Things/Ammo/Rifle/AP/AP_c", true),
 
-                    //action = delegate { Log.Error(this.parent.Position.ToString()); Log.Message(ParentHolder.ToString()); Find.WindowStack.Add(winda);}
+                    //action = delegate { //Log.Error(this.parent.Position.ToString()); //Log.Message(ParentHolder.ToString()); Find.WindowStack.Add(winda);}
 
 
                 };
@@ -80,9 +80,11 @@ namespace HandLoading
                     defaultDesc = "design your own new caliber",
                     icon = ContentFinder<Texture2D>.Get("Things/Ammo/Rifle/AP/AP_c", true),
 
-                    action = delegate { Log.Error(this.parent.Position.ToString()); Log.Message(ParentHolder.ToString()); Find.WindowStack.Add(new CaliberMacher()); }
+                    action = delegate
+                    { //Log.Error(this.parent.Position.ToString()); //Log.Message(ParentHolder.ToString()); Find.WindowStack.Add(new CaliberMacher()); }
 
 
+                    }
                 };
 
 

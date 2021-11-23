@@ -42,7 +42,7 @@
         <defName>Explodability</defName>
         <label>Explodability</label>
         <labelForFullStatList>Unstableness</labelForFullStatList>
-        <description>Powder's chance to explode.</description>
+        <description>Powder's multiplier of ammo's effect on guns.</description>
         <category>Basics</category>
         <defaultBaseValue>0</defaultBaseValue>
         <minValue>0</minValue>
