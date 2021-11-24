@@ -62,6 +62,27 @@ namespace HandLoading
     {
         public static othersomethingsets settings;
 
+        public string FindModPath
+        {
+            get
+            {
+                string result = "";
+
+                if (ModLister.HasActiveModWithName("Hand Loads Saved Ammo Data Container"))
+                {
+                    result = LoadedModManager.RunningMods.ToList().Find(test => test.Name == "Hand Loads Saved Ammo Data Container").RootDir;
+                }
+                else
+                {
+                    result = LoadedModManager.RunningMods.ToList().Find(test => test.Name == "Hand loads [Beta]").RootDir;
+                }
+
+
+                Log.Message(result.Colorize(Color.green));
+
+                return result;
+            }
+        }
 
         public HandeLoading(ModContentPack content) : base(content)
         {
@@ -86,31 +107,10 @@ namespace HandLoading
             listingStandard.GapLine(60);
 
 
-            string workingDirectory = Environment.CurrentDirectory;
-            string actualpathtomod = Directory.GetParent(workingDirectory).Parent.FullName + "/workshop/content/294100/2548930569";
+            string actualpathtomod = FindModPath;
 
 
-            if (Directory.Exists(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/Hand-Loading"))
-            {
-
-                actualpathtomod = Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/Hand-Loading";
-            }
-            if (Directory.Exists(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/2548930569"))
-            {
-
-
-                actualpathtomod = Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/2548930569";
-            }
-            if (Directory.Exists(Directory.GetParent(workingDirectory).Parent.FullName + "/workshop/content/294100/2548930569"))
-            {
-
-                actualpathtomod = Directory.GetParent(workingDirectory).Parent.FullName + "/workshop/content/294100/2548930569";
-            }
-            if (Directory.Exists(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer"))
-            {
-
-                actualpathtomod = Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer";
-            }
+      
 
             string[] stufsf = Directory.GetDirectories(actualpathtomod + "/");
 
@@ -218,6 +218,28 @@ namespace HandLoading
         public SaverComp(World world) : base(world)
         {
         }
+
+        public string FindModPath
+        {
+            get
+            {
+                string result = "";
+
+                if (ModLister.HasActiveModWithName("Hand Loads Saved Ammo Data Container"))
+                {
+                    result = LoadedModManager.RunningMods.ToList().Find(test => test.Name == "Hand Loads Saved Ammo Data Container").RootDir;
+                }
+                else
+                {
+                    result = LoadedModManager.RunningMods.ToList().Find(test => test.Name == "Hand loads [Beta]").RootDir;
+                }
+               
+
+                Log.Message(result.Colorize(Color.green));
+
+                return result;
+            }
+        }
         public override void ExposeData()
         {
             base.ExposeData();
@@ -250,8 +272,7 @@ namespace HandLoading
 
             foreach(ThingDef bench in recpe?.AllRecipeUsers ?? new List<ThingDef>())
             {
-                //Log.Message("=========================".Colorize(new Color(255, 0, 255)));
-                //Log.Message(bench.label.Colorize(new Color(255, 0, 255)));
+
                 ReUserModExt += "<li>" + bench.defName + "</li>";
 
 
@@ -262,54 +283,37 @@ namespace HandLoading
 
             string workingDirectory = Environment.CurrentDirectory;
             //Log.Error(Directory.GetParent(workingDirectory).Parent.FullName);
-            if (sets.Open && !(Directory.Exists(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer")))
+
+            string corrected_path = FindModPath + "/../";
+
+            if (sets.Open && !(Directory.Exists(corrected_path + "HLContainer")))
             {
                 //Log.Message("Creating container directories");
-                Directory.CreateDirectory(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer");
-                Directory.CreateDirectory(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer/Defs");
-                Directory.CreateDirectory(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer/Defs/ammos");
-                Directory.CreateDirectory(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer/Defs/bullets");
-                Directory.CreateDirectory(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer/Defs/categories");
-                Directory.CreateDirectory(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer/Defs/recpe");
-                Directory.CreateDirectory(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer/Patches");
-                Directory.CreateDirectory(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer/Patches/codemade");
-                Directory.CreateDirectory(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer/About");
+                Directory.CreateDirectory(corrected_path + "HLContainer");
+                Directory.CreateDirectory(corrected_path + "HLContainer/Defs");
+                Directory.CreateDirectory(corrected_path + "HLContainer/Defs/ammos");
+                Directory.CreateDirectory(corrected_path + "HLContainer/Defs/bullets");
+                Directory.CreateDirectory(corrected_path + "HLContainer/Defs/categories");
+                Directory.CreateDirectory(corrected_path + "HLContainer/Defs/recpe");
+                Directory.CreateDirectory(corrected_path + "HLContainer/Patches");
+                Directory.CreateDirectory(corrected_path + "HLContainer/Patches/codemade");
+                Directory.CreateDirectory(corrected_path + "HLContainer/About");
                 XmlDocument docsaver = new XmlDocument();
                 docsaver.LoadXml("<ModMetaData><name>Hand Loads Saved Ammo Data Container</name><author>Caulaflower</author><packageId>Caulaflower.HLContainer.CustomAmmoContainer</packageId><supportedVersions><li>1.2</li><li>1.3</li></supportedVersions><url>Link</url><description>Container with your created ammo.</description></ModMetaData>"); //Your string here
 
                 // Save the document to a file and auto-indent the output.
-                XmlTextWriter writersaver = new XmlTextWriter(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer/About/" + "About" + ".xml", null);
+                XmlTextWriter writersaver = new XmlTextWriter(corrected_path + "HLContainer/About/" + "About" + ".xml", null);
                 abc++;
                 writersaver.Formatting = Formatting.Indented;
                 docsaver.Save(writersaver);
             }
-            if (sets.Open && !(Directory.Exists(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer/Defs/saves")))
+            if (sets.Open && !(Directory.Exists(corrected_path + "HLContainer/Defs/saves")))
             {
-                Directory.CreateDirectory(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer/Defs/saves");
+                Directory.CreateDirectory(corrected_path + "HLContainer/Defs/saves");
             }
-            string actualpathtomod = Directory.GetParent(workingDirectory).Parent.FullName + "/workshop/content/294100/2548930569/Defs";
+            string actualpathtomod = FindModPath + "/Defs";
 
-            if (Directory.Exists(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/Hand-Loading"))
-            {
-                //Log.Message("saved ammo in github version files");
-                actualpathtomod = Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/Hand-Loading/Defs";
-            }
-            if (Directory.Exists(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/2548930569"))
-            {
-                //Log.Message("saved ammo in rimpy version files");
-
-                actualpathtomod = Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/2548930569/Defs";
-            }
-            if (Directory.Exists(Directory.GetParent(workingDirectory).Parent.FullName + "/workshop/content/294100/2548930569/Defs"))
-            {
-                //Log.Message("saved ammo in steam version files");
-                actualpathtomod = Directory.GetParent(workingDirectory).Parent.FullName + "/workshop/content/294100/2548930569/Defs";
-            }
-            if (Directory.Exists(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer"))
-            {
-                //Log.Message("saved ammo in container files. The messages are fucked, this is definitely the actual one");
-                actualpathtomod = Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer/Defs";
-            }
+            
 
 
 
@@ -509,36 +513,16 @@ namespace HandLoading
                         if (workingDirectory != null)
                         {
                             Log.Message("2ABC");
-                            if (Directory.GetParent(workingDirectory).Parent != null)
+                            if (/*Directory.GetParent(workingDirectory).Parent != null*/ true)
                             {
                                 Log.Message("3ABC");
-                                if (Directory.GetParent(workingDirectory).Parent.FullName != null)
+                                if (/*Directory.GetParent(workingDirectory).Parent.FullName != null*/ true)
                                 {
                                     Log.Message("4ABC");
-                                    string actualpath = Directory.GetParent(workingDirectory).Parent.FullName + "/workshop/content/294100/2548930569/Defs";
+                                    string actualpath = FindModPath + "/Defs";
                                     if (actualpath != null)
                                     {
-                                        if (Directory.Exists(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/Hand-Loading"))
-                                        {
-                                            //Log.Message("saved ammo in github version files");
-                                            actualpath = Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/Hand-Loading/Defs";
-                                        }
-                                        if (Directory.Exists(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/2548930569"))
-                                        {
-                                            //Log.Message("saved ammo in rimpy version files");
-
-                                            actualpath = Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/2548930569/Defs";
-                                        }
-                                        if (Directory.Exists(Directory.GetParent(workingDirectory).Parent.FullName + "/workshop/content/294100/2548930569/Defs"))
-                                        {
-                                            //Log.Message("saved ammo in steam version files");
-                                            actualpath = Directory.GetParent(workingDirectory).Parent.FullName + "/workshop/content/294100/2548930569/Defs";
-                                        }
-                                        if (Directory.Exists(Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer"))
-                                        {
-                                            //Log.Message("saved ammo in container files. The messages are fucked, this is definitely the actual one");
-                                            actualpath = Directory.GetParent(workingDirectory).Parent.FullName + "/common/Rimworld/Mods/HLContainer/Defs";
-                                        }
+                                      
                                         Log.Message("5ABC");
                                         string text = "<Defs><HandLoading.FactionHandLoad>";
                                         Log.Message("6ABC");
